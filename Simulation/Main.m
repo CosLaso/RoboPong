@@ -6,6 +6,7 @@ close all;
 clear all;
 set(0,'DefaultFigureWindowStyle','docked')
 clc
+clf
 
 %% Building 3D Environment
 
@@ -25,7 +26,7 @@ hold on
 % % PlaceObject('Fence.ply',[4,0,1.4]);
 % % PlaceObject('FenceOD.ply',[0,4,1.4]);
 % PlaceObject('FenceOD.ply',[0,-4,1.4]);          % FenceOD is the fence with xy axis flipped
-
+% 
 % % Placement of Emergency Stop Button (from https://free3d.com/3d-model/emergency-stop-button-813870.html)
 % PlaceObject('Emergency_Stop.ply',[3,-3.8,1]);
 % 
@@ -89,18 +90,29 @@ hold on
 
 %% Movement of Balls [Lab 4.1]
 
-% % At the given moment the ball just moves in a straight line
-% mesh_h = PlaceObject('Ping_Pong_Ball.ply');
+% % Ball just moves triangularly not parabolic (projectile)
+% mesh_h = PlaceObject('Ping_Pong_Ball.ply', [0,0,2]);
 % vertices = get(mesh_h,'Vertices');
 % 
-% axis([-3,3,-3,3,-0.5,8])
+% axis([-1,5,-1,5,-1,5]);
 % 
-% for i = 1:0.5:5
-%     tr = transl(0,0,i);
+% i = 0;    % j represents x coordinate & i represents z coordinate (i is 2 globally)
+% k = 0;    % k is a condtional variable that triggers the bounce
+% 
+% for j = 0:0.2:4
+%     tr = transl(j,0,i);
 %     transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
 %     set(mesh_h,'Vertices',transformedVertices(:,1:3));
 %     drawnow();
-%     pause(0.01);
+%     pause(0.25);
+%     if (i <= -2)
+%         k = 1;
+%     end
+%     if (k == 0)
+%         i = (i-0.2);
+%     else
+%         i = (i+0.2);
+%     end
 % end
 
 %% Simulate 4 DoF Robot - use this until Dobot Models are solved
@@ -110,17 +122,22 @@ hold on
 % L3 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi]) 
 % L4 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi])
 % robot = SerialLink([L1 L2 L3 L4],'name','myRobot');   
-
+% 
 % % % Rotate the base around the Y axis so the Z axis faces downways
 % % robot.base = troty(pi);
 
 %% RMRC (Resolved Rate Motion Control) [Lab 6]
 
-% % Need to adapt this to include 1 extra degree of freedom
-% % 3.5: Resolved Motion Rate Control
+% % Need to adapt this to include 2 extra degrees of freedom
+% 
+% mdl_planar2;                                % Load 2-Link Planar Robot
+% 
+% T1 = [eye(3) [1.5 1 0]'; zeros(1,3) 1];       % First pose
+% T2 = [eye(3) [1.5 -1 0]'; zeros(1,3) 1];      % Second pose
 % steps = 50;
 % 
 % % 3.6
+% M = [1 1 zeros(1,4)];                         % Masking Matrix
 % x1 = [1.5 1]';
 % x2 = [1.5 -1]';
 % deltaT = 0.05;                                        % Discrete time step
@@ -188,7 +205,7 @@ hold on
 %     result(i) = IsCollision(robot,qMatrix(i,:),faces,vertex,faceNormals,false);
 %     robot.animate(qMatrix(i,:));
 % end
-
+% 
 % % 3.2: Manually create cartesian waypoints
 % robot.animate(q1);
 % qWaypoints = [q1 ; robot.ikcon(transl(1.5,-1,0),q1)];
@@ -244,8 +261,9 @@ hold on
 % end
 % robot.animate(qMatrix)
 
-%% GUI (Graphical User Interface)
+%% GUI (Graphical User Interface) [Subject Resources]
 
+% See the app designer file in the directory and adapt it
 
 %% Visual Servoing [Lab 10]
 
