@@ -1,0 +1,12 @@
+
+Notes from inital project consult with Gavin (22/04/2022):
+
+- Concepts that need to be included: RMRC (Resolved Rate Motion Control), Collision Checking/Avoidance, GUI (Graphical User Interface), Visual Seroving
+- Refined project scope - the Dobot will now catch the ball rather than throw it and this will be done by having the Dobot Pneumatic Gripper grip a cup
+- Issues RMRC will be difficult to implement into this project as the EE (End Effector) will be moving in a straight line majority of the time
+- We are not allowed to use the sensor for collision avoidance, but instead we need to follow the way set out in the labs
+- The GUI requires the following functions: -> Teach - manual control function
+							  -> EE Rotation - be able to move + and - (as set out in example)
+							  -> Emergency Stop - said to be covered in lab 10 solution
+							  -> Some other useful function(s) - examples: which coloured ball to catch, where to place object to avoid
+- Simulation for this project is worth a lot so spend more time on that than the real robot (System Demo worth 20% of subject)
