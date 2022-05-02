@@ -1,6 +1,8 @@
 
 %% Lab Assignment 2
 % Cosmino Lasorsa - 13193228
+% Ivy Qian Lei Ou - 13220052
+% Mouloud Brarti - 13190475
 
 close all;
 clear all;
@@ -8,7 +10,7 @@ set(0,'DefaultFigureWindowStyle','docked')
 clc
 clf
 
-%% Building 3D Environment
+%% Building 3D Environment - Adapt to shrink so Dobot can be seen
 
 hold on
 
@@ -51,9 +53,8 @@ hold on
 % PlaceObject('Stool.ply',[-3.25,1.1,0]);
 % PlaceObject('Stool.ply',[-3.5,-2.2,0]);
 
-%% Simulate Dobot ***
+%% Simulate Dobot *** - Models don't build correctly
 
-% % Offsets for the robotics arm is off at the moment
 % Dobot = Dobot(false);
 
 %% Movement of Robot [Lab 4.2] ***
@@ -88,9 +89,8 @@ hold on
 %     end
 % end
 
-%% Movement of Balls [Lab 4.1]
+%% Movement of Balls [Lab 4.1] - Adapt into Environment (Balls moves triangularly not projectile)
 
-% % Ball just moves triangularly not parabolic (projectile)
 % mesh_h = PlaceObject('Ping_Pong_Ball.ply', [0,0,2]);
 % vertices = get(mesh_h,'Vertices');
 % 
@@ -115,7 +115,7 @@ hold on
 %     end
 % end
 
-%% Simulate 4 DoF Robot - use this until Dobot Models are solved
+%% Simulate 4 DoF Robot - Adapt into Environment (Use until Dobot Models work)
 
 % L1 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi])
 % L2 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi])
@@ -167,99 +167,55 @@ hold on
 % p2.plot(qMatrix,'trail','r-');
 
 
-%% Collision Checking/Avoidance [Lab 5]***
+%% Collision Checking/Avoidance [Lab 5] - Adapt into Environment
 
-% % Need to adapt this code once we have the Dobot model working correctly
-% % 2.4: Get the transform of every joint (i.e. start and end of every link)
-% tr = zeros(4,4,robot.n+1);
-% tr(:,:,1) = robot.base;
-% L = robot.links;
-% for i = 1 : robot.n
-%     tr(:,:,i+1) = tr(:,:,i) * trotz(q(i)+L(i).offset) * transl(0,0,L(i).d) * transl(L(i).a,0,0) * trotx(L(i).alpha);
-% end
+% % Stuff in the robot creation for purpose of visualisation
+% q = zeros(1,4);                                                     % Create a vector of initial joint angles        
+% scale = 0.5;
+% workspace = [-4 4 -4 4 -0.05 2];                                    % Set the size of the workspace when drawing the robot
+% robot.plot(q,'workspace',workspace,'scale',scale);                  % Plot the robot
 % 
-% % 2.5: Go through each link and also each triangle face
-% for i = 1 : size(tr,3)-1    
-%     for faceIndex = 1:size(faces,1)
-%         vertOnPlane = vertex(faces(faceIndex,1)',:);
-%         [intersectP,check] = LinePlaneIntersection(faceNormals(faceIndex,:),vertOnPlane,tr(1:3,4,i)',tr(1:3,4,i+1)'); 
-%         if check == 1 && IsIntersectionPointInsideTriangle(intersectP,vertex(faces(faceIndex,:)',:))
-%             plot3(intersectP(1),intersectP(2),intersectP(3),'g*');
-%             display('Intersection');
-%         end
-%     end    
-% end
+% % Creating an object to collide with
+% centerpnt = [3,0,-0.5];
+% side = 1.5;
+% plotOptions.plotFaces = true;
+% [vertex,faces,faceNormals] = RectangularPrism(centerpnt-side/2, centerpnt+side/2,plotOptions);
+% axis equal
 % 
-% % 2.6: Go through until there are no step sizes larger than 1 degree
-% q1 = [-pi/4,0,0];
-% q2 = [pi/4,0,0];
+% % Set Moving Parameters
+% q1 = [-pi/4,0,0 0];
+% q2 = [pi/4,0,0 0];
 % steps = 2;
+% 
 % while ~isempty(find(1 < abs(diff(rad2deg(jtraj(q1,q2,steps)))),1))
 %     steps = steps + 1;
 % end
-% qMatrix = jtraj(q1,q2,steps);
 % 
-% % 2.7
-% result = true(steps,1);
-% for i = 1: steps
+% qMatrix = jtraj(q1,q2,steps);
+% result = true(steps,1);                 % A matrix of steps [rows] x 1 [column]
+% 
+% for i = 1:steps
 %     result(i) = IsCollision(robot,qMatrix(i,:),faces,vertex,faceNormals,false);
 %     robot.animate(qMatrix(i,:));
 % end
 % 
-% % 3.2: Manually create cartesian waypoints
+% % Manually create cartesian waypoints - For a manipulator with fewer than 6DOF a mask matrix argument must be specified
 % robot.animate(q1);
-% qWaypoints = [q1 ; robot.ikcon(transl(1.5,-1,0),q1)];
-% qWaypoints = [qWaypoints; robot.ikcon(transl(1,-1,0),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; robot.ikcon(transl(1.1,-0.5,0),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; robot.ikcon(transl(1.1,0,0),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; robot.ikcon(transl(1.1,0.5,0),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; robot.ikcon(transl(1.1,1,0),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; robot.ikcon(transl(1.5,1,0),q2)];
+% qWaypoints = [q1 ; robot.ikcon(transl(2.5,-1.1,0),q1)];
+% qWaypoints = [qWaypoints; robot.ikcon(transl(2,-1.1,0),qWaypoints(end,:))];
+% qWaypoints = [qWaypoints; robot.ikcon(transl(2.1,-1,0),qWaypoints(end,:))];
+% qWaypoints = [qWaypoints; robot.ikcon(transl(2.1,0,0),qWaypoints(end,:))];
+% qWaypoints = [qWaypoints; robot.ikcon(transl(2.1,1,0),qWaypoints(end,:))];
+% qWaypoints = [qWaypoints; robot.ikcon(transl(2.1,1.1,0),qWaypoints(end,:))];
+% qWaypoints = [qWaypoints; robot.ikcon(transl(2.5,1.1,0),q2)];
 % qWaypoints = [qWaypoints; q2];
 % qMatrix = InterpolateWaypointRadians(qWaypoints,deg2rad(5));
 % if IsCollision(robot,qMatrix,faces,vertex,faceNormals)
 %     error('Collision detected!!');
 % else
-%     display('No collision found');
+%     disp('No collision found');
 % end
-% robot.animate(qMatrix);        
-% 
-% % 3.3: Randomly select waypoints (primative RRT)
-% robot.animate(q1);
-% qWaypoints = [q1;q2];
-% isCollision = true;
-% checkedTillWaypoint = 1;
-% qMatrix = [];
-% while (isCollision)
-%     startWaypoint = checkedTillWaypoint;
-%     for i = startWaypoint:size(qWaypoints,1)-1
-%         qMatrixJoin = InterpolateWaypointRadians(qWaypoints(i:i+1,:),deg2rad(10));
-%         if ~IsCollision(robot,qMatrixJoin,faces,vertex,faceNormals)
-%             qMatrix = [qMatrix; qMatrixJoin]; %#ok<AGROW>
-%             robot.animate(qMatrixJoin);
-%             size(qMatrix)
-%             isCollision = false;
-%             checkedTillWaypoint = i+1;
-%             % Now try and join to the final goal (q2)
-%             qMatrixJoin = InterpolateWaypointRadians([qMatrix(end,:); q2],deg2rad(10));
-%             if ~IsCollision(robot,qMatrixJoin,faces,vertex,faceNormals)
-%                 qMatrix = [qMatrix;qMatrixJoin];
-%                 % Reached goal without collision, so break out
-%                 break;
-%             end
-%         else
-%             % Randomly pick a pose that is not in collision
-%             qRand = (2 * rand(1,3) - 1) * pi;
-%             while IsCollision(robot,qRand,faces,vertex,faceNormals)
-%                 qRand = (2 * rand(1,3) - 1) * pi;
-%             end
-%             qWaypoints =[ qWaypoints(1:i,:); qRand; qWaypoints(i+1:end,:)];
-%             isCollision = true;
-%             break;
-%         end
-%     end
-% end
-% robot.animate(qMatrix)
+% robot.animate(qMatrix);     
 
 %% GUI (Graphical User Interface) [Subject Resources]
 
