@@ -1,5 +1,5 @@
 ## RoboPong
-#Robotics Project - 41013
+# Robotics Project - 41013
 
 This repository contains all the code for our Industrial Robotics project - 'RoboPong'. 
 RoboPong aims to track the trajectory of a ping pong ball being thrown at it and will catch it in a cup being held by the robotic arm's gripper.
