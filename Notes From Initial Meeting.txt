@@ -10,3 +10,4 @@ Notes from inital project consult with Gavin (22/04/2022):
 							  -> Emergency Stop - said to be covered in lab 10 solution
 							  -> Some other useful function(s) - examples: which coloured ball to catch, where to place object to avoid
 - Simulation for this project is worth a lot so spend more time on that than the real robot (System Demo worth 20% of subject)
+
