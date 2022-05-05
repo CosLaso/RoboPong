@@ -21,10 +21,6 @@ defaultEndEffectorPosition = [0.2591,0,-0.0086]    % Default end effector positi
 groundLevel = -0.0419                              % Z value of the table
 safetyStatus = getSafetyStatus();                  % Return the safety status of the robot
 
-%% Return End Effector Position
-
-% endEffectorPosition = getEndEffectorPosition();     % Return the current end effector position
-
 %% Movement of the End Effector
 
 fprintf('Dobot is moving to');              % Display end effector target position
