@@ -1,0 +1,7 @@
+Dobot Start up Commands
+
+1)	source /home/cos16/catkin_ws/devel/setup.bash
+
+2)	sudo chmod 666 /dev/ttyUSB0
+
+3)	roslaunch dobot_magician_driver dobot_magician.launch
