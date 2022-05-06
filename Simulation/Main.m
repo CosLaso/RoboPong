@@ -14,48 +14,65 @@ clf
 
 hold on
 
-% % Place in Concrete Floor
-% surf([-4,-4;4,4],[-4,4;-4,4],[0,0;0,0],'CData',imread('Concrete.jpg'),'FaceColor','texturemap');            % From UTS Canvas
-% 
-% % Place in Hazard Tape (from https://nationalsafetysigns.com.au/safety-signs/reflective-tape-sticker-hazard-tape-v2628/)
-% surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Tape.jpg'),'FaceColor','texturemap');
-% 
-% % Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
-% PlaceObject('Table.ply',[0,0,0]);
-% 
-% % Placement of Fence (from https://free3d.com/3d-model/fence-43609.html) [2,4,1,3]
-% PlaceObject('Fence.ply',[-4,0,1.4]);
-% % PlaceObject('Fence.ply',[4,0,1.4]);
-% % PlaceObject('FenceOD.ply',[0,4,1.4]);
-% PlaceObject('FenceOD.ply',[0,-4,1.4]);          % FenceOD is the fence with xy axis flipped
-% 
-% % Placement of Emergency Stop Button (from https://free3d.com/3d-model/emergency-stop-button-813870.html)
-% PlaceObject('Emergency_Stop.ply',[3,-3.8,1]);
-% 
-% % Placement of Fire Extinguisher (from https://free3d.com/3d-model/-fire-extinguisher-v3--639064.html)
-% PlaceObject('Fire_Extinguisher.ply',[-3.8,3.25,0.55]);
-% 
-% % Placement of Worker (from https://www.cgtrader.com/items/889520/download-page)
-% PlaceObject('Worker.ply',[-2,-2.75,0]);
-% 
-% % Placement of Trash Can (from https://free3d.com/3d-model/rubbish-bin-83371.html)
-% PlaceObject('Bin.ply',[-3.8,2.5,0]);
-% 
-% % Placement of Storage Container (from https://free3d.com/3d-model/storage-container-v2--782422.html)
-% PlaceObject('Storage.ply',[-3.5,0,0]);
-% PlaceObject('Storage.ply',[-3.5,-1.25,0]);
-% 
-% % Placement of Stool (from https://free3d.com/3d-model/wood-stool-303532.html)
-% PlaceObject('Stool.ply',[0,-3.5,0]);
-% PlaceObject('Stool.ply',[0.75,-3.25,0]);
-% PlaceObject('Stool.ply',[1.65,-3.3,0]);
-% PlaceObject('Stool.ply',[-3.65,1.5,0]);
-% PlaceObject('Stool.ply',[-3.25,1.1,0]);
-% PlaceObject('Stool.ply',[-3.5,-2.2,0]);
+% Place in Concrete Floor
+surf([-6,-6 ; 10,10], [-6,6 ; -6,6], [0,0 ; 0,0],'CData',imread('Concrete.jpg'),'FaceColor','texturemap');            % From UTS Canvas
+surf([-4,-4 ; 8,8], [-4,4 ; -4,4], [0,0 ; 0,0],'CData',imread('Tile.jpg'),'FaceColor','texturemap'); 
+
+% Place in Hazard Tape (from https://nationalsafetysigns.com.au/safety-signs/reflective-tape-sticker-hazard-tape-v2628/)
+surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Tape.jpg'),'FaceColor','texturemap');
+
+% Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
+PlaceObject('Table.ply',[0,0,0]);
+
+% Placement of Fence (from https://free3d.com/3d-model/fence-43609.html) [2,4,1,3]
+ PlaceObject('Fence1.ply', [-4, 2,1.7]);
+ PlaceObject('Fence1.ply', [-4,-2,1.7]);
+ PlaceObject('Fence1.ply', [ 8, 2,1.7]);
+ PlaceObject('Fence1.ply', [ 8,-2,1.7]);
+ PlaceObject('Fence2.ply', [ 2,-4,1.7]);
+ PlaceObject('Fence2.ply', [-2,-4,1.7]);
+ PlaceObject('Fence2.ply', [ 6,-4,1.7]);
+ PlaceObject('Fence2.ply', [ 6, 4,1.7]);
+ PlaceObject('Fence2.ply', [-2, 4,1.7]);          % FenceOD is the fence with xy axis flipped
+
+% Placement of Emergency Stop Button (from https://free3d.com/3d-model/emergency-stop-button-813870.html)
+PlaceObject('Emergency_Stop.ply',[3,-3.8,1]);
+PlaceObject('Emergency_Stop.ply',[-3,-3.8,1]);
+
+% Placement of Fire Extinguisher (from https://free3d.com/3d-model/-fire-extinguisher-v3--639064.html)
+PlaceObject('Fire_Extinguisher.ply',[-3.8,3.25,0.55]);
+
+% Placement of Worker (from https://www.cgtrader.com/items/889520/download-page)
+PlaceObject('Worker.ply',[-1,-1.75,0]);
+PlaceObject('Worker2.ply', [2.2, 0, 0])
+
+% Placement of Trash Can (from https://free3d.com/3d-model/rubbish-bin-83371.html)
+PlaceObject('Bin.ply',[-3.8,2.5,0]);
+
+PlaceObject('Plants.ply', [6, 4.5, 0])
+PlaceObject('Plants.ply', [-2, 4.5, 0])
+
+% This places object sink (https://www.cgtrader.com/items/948227/download-page)
+PlaceObject('Sink.ply', [6, -3.8, 0])
+
+% Placement of Storage Container (from https://free3d.com/3d-model/storage-container-v2--782422.html)
+PlaceObject('Storage.ply',[-3.5,0,0]);
+PlaceObject('Storage.ply',[-3.5,-1.25,0]);
+PlaceObject('Storage.ply',[7.5,0,0]);
+PlaceObject('Storage.ply',[7.5,-1.25,0]);
+PlaceObject('Storage.ply',[7.5,1.25,0]);
+
+% Placement of Stool (from https://free3d.com/3d-model/wood-stool-303532.html)
+PlaceObject('Stool.ply',[0,-3.3,0]);
+PlaceObject('Stool.ply',[0.75,-3.3,0]);
+PlaceObject('Stool.ply',[1.65,-3.3,0]);
+PlaceObject('Stool.ply',[-3.65,1.5,0]);
+PlaceObject('Stool.ply',[-3.25,1.1,0]);
+PlaceObject('Stool.ply',[-3.5,-2.2,0]);
 
 %% Simulate Dobot *** - Models don't build correctly
 
-% Dobot = Dobot(false);
+ Dobot = Dobot(false);
 
 %% Movement of Robot [Lab 4.2] ***
 
@@ -91,29 +108,29 @@ hold on
 
 %% Movement of Balls [Lab 4.1] - Adapt into Environment (Balls moves triangularly not projectile)
 
-% mesh_h = PlaceObject('Ping_Pong_Ball.ply', [0,0,2]);
-% vertices = get(mesh_h,'Vertices');
-% 
-% axis([-1,5,-1,5,-1,5]);
-% 
-% i = 0;    % j represents x coordinate & i represents z coordinate (i is 2 globally)
-% k = 0;    % k is a condtional variable that triggers the bounce
-% 
-% for j = 0:0.2:4
-%     tr = transl(j,0,i);
-%     transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
-%     set(mesh_h,'Vertices',transformedVertices(:,1:3));
-%     drawnow();
-%     pause(0.25);
-%     if (i <= -2)
-%         k = 1;
-%     end
-%     if (k == 0)
-%         i = (i-0.2);
-%     else
-%         i = (i+0.2);
-%     end
-% end
+mesh_h = PlaceObject('Ping_Pong_RedBall.ply', [0,0,2]);
+vertices = get(mesh_h,'Vertices');
+
+axis([-1,5,-1,5,-1,5]);
+
+i = 0;    % j represents x coordinate & i represents z coordinate (i is 2 globally)
+k = 0;    % k is a condtional variable that triggers the bounce
+
+for j = 0:0.2:4
+    tr = transl(j,0,i);
+    transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
+    set(mesh_h,'Vertices',transformedVertices(:,1:3));
+    drawnow();
+    pause(0.25);
+    if (i <= -2)
+        k = 1;
+    end
+    if (k == 0)
+        i = (i-0.2);
+    else
+        i = (i+0.2);
+    end
+end
 
 %% Simulate 4 DoF Robot - Adapt into Environment (Use until Dobot Models work)
 
