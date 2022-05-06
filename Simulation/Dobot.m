@@ -30,11 +30,11 @@ function GetDobotRobot(self)
             L(1) = Link('d', 0.09, 'a', 0, 'alpha', pi/2, 'offset', 0, 'qlim', [-3*pi/4 3*pi/4]);
             L(2) = Link('d', 0, 'a', -0.152, 'alpha', 0,'offset', deg2rad(-32.5), 'qlim', [0,17*pi/36]);
             L(3) = Link('d', 0, 'a', -0.147, 'alpha', 0, 'offset', deg2rad(62.25), 'qlim', [-pi/18,19*pi/36]);
-            L(4) = Link('d', 0.11235, 'a', 0.02, 'alpha', 0, 'offset', deg2rad(-30), 'qlim', [-pi/2,pi/2]);
+            L(4) = Link('d', 0, 'a', 0.02, 'alpha', 0, 'offset', deg2rad(-30), 'qlim', [-pi/2,pi/2]);
             self.model = SerialLink(L, 'name', name);
 
             % Rotate robot to the correct orientation
-            self.model.base = transl(0.55,0,0.8) * trotx(0,'deg') * troty(0,'deg');
+            self.model.base = transl(0.55,0,1.145) * trotx(0,'deg') * troty(0,'deg');
 end
 
         %% PlotAndColourRobot

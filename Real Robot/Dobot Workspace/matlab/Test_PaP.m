@@ -12,13 +12,15 @@ rosinit;            % Initialise connection
 
 %% Initialise Dobot
 
-% [safetyStatePublisher,safetyStateMsg] = rospublisher('/dobot_magician/target_safety_status');
-% safetyStateMsg.Data = 2;
-% send(safetyStatePublisher,safetyStateMsg);
-% fprintf('Dobot is initialised with the current parameters\n');
+[safetyStatePublisher,safetyStateMsg] = rospublisher('/dobot_magician/target_safety_status');
+safetyStateMsg.Data = 2;
+send(safetyStatePublisher,safetyStateMsg);
+fprintf('Dobot is initialised with the current parameters\n');
  
-% defaultEndEffectorPosition = [0.2591,0,-0.0086]    % Default end effector position
-% groundLevel = -0.0419                              % Z value of the table
+defaultEndEffectorPosition = [0.2591,0,-0.0086]    % Default end effector position
+groundLevel = -0.0419                              % Z value of the table
+
+pause(10);
 
 %% Movement of the End Effector to Object
 
@@ -40,14 +42,19 @@ targetEndEffectorMsg.Orientation.Z = qua(4);
      
 send(targetEndEffectorPub,targetEndEffectorMsg);         % Send command to move
 fprintf('Dobot has completed translation\n');            % Display end effector current position
+pause(10);
 
 %% Pick Up Object
+
+pause(15);
 
 state = 1;                        % Binary operator - change to toggle grip
 
 [toolStatePub, toolStateMsg] = rospublisher('/dobot_magician/target_tool_state');
 toolStateMsg.Data = [1 state];
 send(toolStatePub,toolStateMsg);  % Send command to gripper
+
+pause(5);
 
 %% Movement of the End Effector to Desired Space
 
@@ -69,6 +76,8 @@ targetEndEffectorMsg.Orientation.Z = qua(4);
      
 send(targetEndEffectorPub,targetEndEffectorMsg);         % Send command to move
 fprintf('Dobot has completed translation\n');            % Display end effector current position
+
+pause(10);
 
 %% Release Object
 
