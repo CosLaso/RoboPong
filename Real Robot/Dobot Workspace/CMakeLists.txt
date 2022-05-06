@@ -1,24 +1,27 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dobot)
+project(dobot_magician_driver)
 
-## Add support for C++11, supported in ROS Kinetic and newer
-# add_definitions(-std=c++11)
+## Compile as C++11, supported in ROS Kinetic and newer
+ add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
-  message_generation
-  genmsg
   geometry_msgs
+  message_generation
+  roscpp
+  sensor_msgs
+  std_msgs
+  tf2
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Boost REQUIRED COMPONENTS system signals)
 
+find_package(PkgConfig)
+pkg_check_modules(SERIAL libserial)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -35,10 +38,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
 ## * In the file package.xml:
 ##   * add a build_depend tag for "message_generation"
-##   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
+##   * add a build_depend and a exec_depend tag for each package in MSG_DEP_SET
 ##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
 ##     but can be declared for certainty nonetheless:
-##     * add a run_depend tag for "message_runtime"
+##     * add a exec_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
@@ -50,83 +53,36 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-##add_message_files(
-##  FILES
-##)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  SetCmdTimeout.srv
+# LEGACY STUFF
+#  add_service_files(
+#    FILES
+#    SetEndEffector.srv
+#    SetTargetPoints.srv
+#    SetEMotor.srv
+#    SetIOMultiplexing.srv
+#    SetIODigitalOutput.srv
+#    GetIODigitalInput.srv
+#    SetIOPWMOutput.srv
+#    GetIOAnalogInput.srv 
+#    SetCPParams.srv
+#    GetCPParams.srv
+#    SetCPCmd.srv
+#    SetQueuedCmd.srv
+#    SetEStop.srv
+#    SetInitialise.srv
+#    SetLinearRail.srv
+#    SetTargetPointsWithRail.srv
 
-  GetDeviceSN.srv
-  SetDeviceName.srv
-  GetDeviceName.srv
-  GetDeviceVersion.srv
-
-  GetPose.srv
-
-  GetAlarmsState.srv
-  ClearAllAlarmsState.srv
-
-  SetHOMEParams.srv
-  GetHOMEParams.srv
-  SetHOMECmd.srv
-
-  SetEndEffectorParams.srv
-  GetEndEffectorParams.srv
-  SetEndEffectorLaser.srv
-  GetEndEffectorLaser.srv
-  SetEndEffectorSuctionCup.srv
-  GetEndEffectorSuctionCup.srv
-  SetEndEffectorGripper.srv
-  GetEndEffectorGripper.srv
-
-  SetJOGJointParams.srv
-  GetJOGJointParams.srv
-  SetJOGCoordinateParams.srv
-  GetJOGCoordinateParams.srv
-  SetJOGCommonParams.srv
-  GetJOGCommonParams.srv
-  SetJOGCmd.srv
-
-  SetPTPJointParams.srv
-  GetPTPJointParams.srv
-  SetPTPCoordinateParams.srv
-  GetPTPCoordinateParams.srv
-  SetPTPJumpParams.srv
-  GetPTPJumpParams.srv
-  SetPTPCommonParams.srv
-  GetPTPCommonParams.srv
-  SetPTPCmd.srv
-
-  SetCPParams.srv
-  GetCPParams.srv
-  SetCPCmd.srv
-
-  SetARCParams.srv
-  GetARCParams.srv
-  SetARCCmd.srv
-
-  SetWAITCmd.srv
-
-  SetTRIGCmd.srv
-
-  SetIOMultiplexing.srv
-  GetIOMultiplexing.srv
-  SetIODO.srv
-  GetIODO.srv
-  SetIOPWM.srv
-  GetIOPWM.srv
-  GetIODI.srv
-  GetIOADC.srv
-  SetEMotor.srv
-
-  SetQueuedCmdStartExec.srv
-  SetQueuedCmdStopExec.srv
-  SetQueuedCmdForceStopExec.srv
-  SetQueuedCmdClear.srv
-)
+#   Service1.srv
+#   Service2.srv
+#  )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -136,11 +92,10 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
-
+ generate_messages(
+   DEPENDENCIES
+#   geometry_msgs#   sensor_msgs#   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -149,7 +104,7 @@ generate_messages(
 ## To declare and build dynamic reconfigure parameters within this
 ## package, follow these steps:
 ## * In the file package.xml:
-##   * add a build_depend and a run_depend tag for "dynamic_reconfigure"
+##   * add a build_depend and a exec_depend tag for "dynamic_reconfigure"
 ## * In this file (CMakeLists.txt):
 ##   * add "dynamic_reconfigure" to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
@@ -167,14 +122,14 @@ generate_messages(
 ###################################
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if you package contains header files
+## INCLUDE_DIRS: uncomment this if your package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES dobot
-CATKIN_DEPENDS roscpp rospy std_msgs message_runtime geometry_msgs
+#  LIBRARIES dobot_magician_driver
+#  CATKIN_DEPENDS geometry_msgs message_generation roscpp sensor_msgs std_msgs tf2
 #  DEPENDS system_lib
 )
 
@@ -184,49 +139,14 @@ CATKIN_DEPENDS roscpp rospy std_msgs message_runtime geometry_msgs
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
-
-if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-    include_directories(
-      ${catkin_INCLUDE_DIRS}
-      src/DobotDll_x86
-    )
-
-    link_directories(
-      src/DobotDll_x86
-    )
-else()
-    include_directories(
-      ${catkin_INCLUDE_DIRS}
-      src/DobotDll_x64
-    )
-
-    link_directories(
-      src/DobotDll_x64
-    )
-endif()
-
-
-
-add_executable(DobotServer src/DobotServer.cpp)
-target_link_libraries(DobotServer ${catkin_LIBRARIES} DobotDll)
-add_dependencies(DobotServer dobot_gencpp)
-
-add_executable(DobotClient_JOG src/DobotClient_JOG.cpp)
-target_link_libraries(DobotClient_JOG ${catkin_LIBRARIES})
-add_dependencies(DobotClient_JOG dobot_gencpp)
-
-add_executable(DobotClient_PTP src/DobotClient_PTP.cpp)
-target_link_libraries(DobotClient_PTP ${catkin_LIBRARIES})
-add_dependencies(DobotClient_PTP dobot_gencpp)
-
-add_executable(DobotClient_topic src/DobotClient_topic.cpp)
-target_link_libraries(DobotClient_topic ${catkin_LIBRARIES})
-add_dependencies(DobotClient_topic dobot_gencpp)
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/dobot.cpp
+#   src/${PROJECT_NAME}/dobot_magician_driver.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -237,7 +157,13 @@ add_dependencies(DobotClient_topic dobot_gencpp)
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/dobot_node.cpp)
+ set(${PROJECT_NAME}_SOURCES
+    src/dobot_ros_wrapper.cpp
+    src/dobot_communication.cpp
+    src/dobot_state.cpp
+    src/dobot_controller.cpp
+    src/dobot_driver.cpp)
+ add_executable(dobot_magician_driver ${${PROJECT_NAME}_SOURCES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -247,12 +173,13 @@ add_dependencies(DobotClient_topic dobot_gencpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ add_dependencies(dobot_magician_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+ target_link_libraries(dobot_magician_driver
+   PRIVATE ${SERIAL_LDFLAGS}
+   ${catkin_LIBRARIES}
+ )
 
 #############
 ## Install ##
@@ -294,7 +221,7 @@ add_dependencies(DobotClient_topic dobot_gencpp)
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_dobot.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_dobot_magician_driver.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
