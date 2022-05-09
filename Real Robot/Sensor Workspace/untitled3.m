@@ -43,7 +43,7 @@ yb = ((min(boundary(:,2))) + (max(boundary(:,2))))/2;
 hold on;
 scatter(xb,yb)
 hold off;
-
+%intrinsic parameters from camera
  K = [912.508056640625, 0.0, 651.252197265625, 0.0, 912.2136840820312, 348.5895080566406, 0.0, 0.0, 1.0];
  intrinsics = cameraIntrinsics([K(1) K(5)],[K(3) K(6)],[1280 720]);
  rgbHeight = intrinsics.ImageSize(1);
