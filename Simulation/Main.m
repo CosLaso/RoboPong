@@ -10,7 +10,7 @@ set(0,'DefaultFigureWindowStyle','docked')
 clc
 clf
 
-%% Building 3D Environment - Adapt to shrink so Dobot can be seen
+%% Building 3D Environment
 
 hold on
 
@@ -70,9 +70,85 @@ PlaceObject('Stool.ply',[-3.65,1.5,0]);
 PlaceObject('Stool.ply',[-3.25,1.1,0]);
 PlaceObject('Stool.ply',[-3.5,-2.2,0]);
 
-%% Simulate Dobot *** - Models don't build correctly
+%% Simulate 4 DoF Robot (Use until Dobot Models work)
 
- Dobot = Dobot(false);
+L1 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+L2 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+L3 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+L4 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+robot = SerialLink([L1 L2 L3 L4],'name','myRobot');   
+
+% Rotate robot to the correct orientation
+robot.base = transl(0.55,0,1.145) * trotx(0,'deg') * troty(0,'deg');
+
+% Plot the robot into the environment
+robot.plot([pi,pi,pi,pi]);
+robot.delay = 0;
+
+%% Movement of Balls [Lab 4.1] (Balls moves triangularly not projectile)
+
+mesh_h = PlaceObject('Ping_Pong_RedBall.ply', [-0.95,0.25,1.445]);  % Bouncing ball (red)
+vertices = get(mesh_h,'vertices');
+mesh_h2 = PlaceObject('Ping_Pong_Ball.ply', [-0.95,-0.25,1.445]);   % Bouncing ball (yellow)
+vertices2 = get(mesh_h2,'vertices');
+
+i = 0;    % j represents x coordinate & i represents z coordinate (i is 1.445 globally)
+k = 0;    % k is a condtional variable that triggers the bounce
+
+for j = 0:0.05:1.5
+    tr = transl(j,0,i);
+    transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
+    transformedVertices2 = [vertices2,ones(size(vertices2,1),1)] * tr';
+    set(mesh_h,'vertices',transformedVertices(:,1:3));
+    set(mesh_h2,'vertices',transformedVertices2(:,1:3));
+    drawnow();
+    pause(0.25);
+    if (i <= -0.3)
+        k = 1;
+    end
+    if (k == 1)
+        i = (i+0.015);
+    else
+        i = (i-0.015);
+    end
+end
+
+%% Simulate Dobot
+
+% initialJoints = [0 0 0 0];
+% Dobot = Dobot(false);
+% left = [0.4, -0.2, 1.4];
+% right = [0.4, 0.2, 1.4];
+% steps = 100;
+% MoveLandR(Dobot, initialJoints, left)
+% MoveLandR(Dobot, initialJoints, right)
+
+%% Movement of Cup (on End Effector) [Lab 4.1] - Need to fix (cones & joints are building incorrectly)
+
+% mesh_h3 = PlaceObject('Cup.ply');
+% vertices3 = get(mesh_h3,'vertices');
+% 
+% BallColour = 0;
+% 
+% if (BallColour == 0)            % For red ball
+%     for i = pi:0.01:(5*pi)/4
+%         robot.animate([i,i,0,0])
+%         tr = robot.fkine([i,i,0,0]);
+%         transformedVertices3 = [vertices3,ones(size(vertices3,1),1)] * tr';
+%         set(mesh_h3,'vertices',transformedVertices3(:,1:3));
+%         drawnow();
+%         pause(0.01);
+%     end
+% else                            % For yellow ball
+%     for i = pi:-0.01:(3*pi)/4
+%         robot.animate([i,i,0,0])
+%         tr = robot.fkine([i,i,0,0]);
+%         transformedVertices3 = [vertices3,ones(size(vertices3,1),1)] * tr';
+%         set(mesh_h3,'vertices',transformedVertices3(:,1:3));
+%         drawnow();
+%         pause(0.01);
+%     end    
+% end
 
 %% Movement of Robot [Lab 4.2] ***
 
@@ -91,6 +167,7 @@ PlaceObject('Stool.ply',[-3.5,-2.2,0]);
 %     pause(0.01)
 % end
 
+
 % function translateto(self)
 %     steps = 100;
 %     modelq_i = [0 0 0 0];
@@ -106,48 +183,11 @@ PlaceObject('Stool.ply',[-3.5,-2.2,0]);
 %     end
 % end
 
-%% Movement of Balls [Lab 4.1] - Adapt into Environment (Balls moves triangularly not projectile)
-
-mesh_h = PlaceObject('Ping_Pong_RedBall.ply', [0,0,2]);
-vertices = get(mesh_h,'Vertices');
-
-axis([-1,5,-1,5,-1,5]);
-
-i = 0;    % j represents x coordinate & i represents z coordinate (i is 2 globally)
-k = 0;    % k is a condtional variable that triggers the bounce
-
-for j = 0:0.2:4
-    tr = transl(j,0,i);
-    transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
-    set(mesh_h,'Vertices',transformedVertices(:,1:3));
-    drawnow();
-    pause(0.25);
-    if (i <= -2)
-        k = 1;
-    end
-    if (k == 0)
-        i = (i-0.2);
-    else
-        i = (i+0.2);
-    end
-end
-
-%% Simulate 4 DoF Robot - Adapt into Environment (Use until Dobot Models work)
-
-% L1 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi])
-% L2 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi])
-% L3 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi]) 
-% L4 = Link('d',0,'a',1,'alpha',0,'qlim',[-pi pi])
-% robot = SerialLink([L1 L2 L3 L4],'name','myRobot');   
-% 
-% % % Rotate the base around the Y axis so the Z axis faces downways
-% % robot.base = troty(pi);
-
 %% RMRC (Resolved Rate Motion Control) [Lab 6]
 
 % % Need to adapt this to include 2 extra degrees of freedom
 % 
-% mdl_planar2;                                % Load 2-Link Planar Robot
+% mdl_planar2;                                  % Load 2-Link Planar Robot
 % 
 % T1 = [eye(3) [1.5 1 0]'; zeros(1,3) 1];       % First pose
 % T2 = [eye(3) [1.5 -1 0]'; zeros(1,3) 1];      % Second pose
@@ -234,9 +274,171 @@ end
 % end
 % robot.animate(qMatrix);     
 
+
+% % Collision detection line (harder) - Finds actual point of intersection
+% mdl_planar3;
+% 
+% [v,f,fn] = RectangularPrism([2,-1.1,-1], [3,1.1,1]);
+% steps = 50;
+% q1 = [pi/3,0,0]; 
+% q2 = [-pi/3,0,0];
+% 
+% hold on
+% qMatrix = jtraj(q1,q2,steps);
+% for i = 1:steps
+%     result = IsCollision(p3,qMatrix(i,:),f,v,fn);
+%     if result == 1
+%         qMatrix(i,:)
+%         p3.plot(q1);
+%         pause(3);
+%         p3.animate(qMatrix(1:i,:));
+%         break
+%     end 
+% end 
+
 %% GUI (Graphical User Interface) [Subject Resources]
 
 % See the app designer file in the directory and adapt it
 
-%% Visual Servoing [Lab 10]
+%% IBVS (Image Based Visual Servoing) [Lab 10]
 
+% % Using a UR10 - basic sutff
+% r = UR10(); 
+% qt =  [1.6; -1; -1.2; -0.5; 0; 0];
+% focal = 0.08;
+% pixel = 10e-5;
+% resolution = [1024 1024];
+% centre = [512 512];
+% pStar =  [700 300 300 700; 300 300 700 700]; 
+% P=[2,2,2,2; -0.4,0.4,0.4,-0.4; 1.4,1.4,0.6,0.6]; 
+% 
+% q = qt';
+% cam = CentralCamera('focal', focal, 'pixel', pixel, 'resolution', resolution, 'centre', centre); 
+% Tc0 = r.model.fkine(q);
+% cam.T = Tc0;
+% uv = cam.plot(P);
+% e = pStar - uv
+% round(e)
+% 
+% 
+% % Using Lab 8 (without plotting) - 1.1 Definitions
+% % Create image target (points in the image plane) 
+% pStar = [662 362 362 662; 362 362 662 662];
+% %Create 3D points
+% P=[1.8,1.8,1.8,1.8;
+% -0.25,0.25,0.25,-0.25;
+%  1.25,1.25,0.75,0.75];
+% % Make a UR10
+% r = UR10();             
+% %Initial pose
+% q0 = [pi/2; -pi/3; -pi/3; -pi/6; 0; 0];
+% % Add the camera
+% cam = CentralCamera('focal', 0.08, 'pixel', 10e-5, ...
+% 'resolution', [1024 1024], 'centre', [512 512],'name', 'UR10camera');
+% % frame rate
+% fps = 25;
+% %Define values
+% %gain of the controler
+% lambda = 0.6;
+% %depth of the IBVS
+% depth = mean (P(1,:));
+% 
+% % 1.2 Initialise Simulation (Display in 3D)
+% %Display UR10
+% Tc0= r.model.fkine(q0);
+% r.model.animate(q0');
+% drawnow
+% % plot camera and points
+% cam.T = Tc0;
+% % Display points in 3D and the camera
+% cam.plot_camera('Tcam',Tc0, 'label','scale',0.15);
+% plot_sphere(P, 0.05, 'b')
+% lighting gouraud
+% light
+% 
+% % 1.3 Initialise Simulation (Display in Image view)
+% %Project points to the image
+% p = cam.plot(P, 'Tcam', Tc0);
+% %camera view and plotting
+% cam.clf()
+% cam.plot(pStar, '*'); % create the camera view
+% cam.hold(true);
+% cam.plot(P, 'Tcam', Tc0, 'o'); % create the camera view
+% pause(2)
+% cam.hold(true);
+% cam.plot(P);    % show initial view
+% %Initialise display arrays
+% vel_p = [];
+% uv_p = [];
+% history = [];
+% 
+% % 1.4 Loop
+% % loop of the visual servoing
+% ksteps = 0;
+%  while true
+%         ksteps = ksteps + 1;
+%         % compute the view of the camera
+%         uv = cam.plot(P);
+%         % compute image plane error as a column
+%         e = pStar-uv;   % feature error
+%         e = e(:);
+%         Zest = [];
+%         % compute the Jacobian
+%         if isempty(depth)
+%             % exact depth from simulation (not possible in practice)
+%             pt = homtrans(inv(Tcam), P);
+%             J = cam.visjac_p(uv, pt(3,:) );
+%         elseif ~isempty(Zest)
+%             J = cam.visjac_p(uv, Zest);
+%         else
+%             J = cam.visjac_p(uv, depth );
+%         end
+%         % compute the velocity of camera in camera frame
+%         try
+%             v = lambda * pinv(J) * e;
+%         catch
+%             status = -1;
+%             return
+%         end
+%         fprintf('v: %.3f %.3f %.3f %.3f %.3f %.3f\n', v);
+%         %compute robot's Jacobian and inverse
+%         J2 = r.model.jacobn(q0);
+%         Jinv = pinv(J2);
+%         % get joint velocities
+%         qp = Jinv*v;
+%          %Maximum angular velocity cannot exceed 180 degrees/s
+%          ind=find(qp>pi);
+%          if ~isempty(ind)
+%              qp(ind)=pi;
+%          end
+%          ind=find(qp<-pi);
+%          if ~isempty(ind)
+%              qp(ind)=-pi;
+%          end
+%         %Update joints 
+%         q = q0 + (1/fps)*qp;
+%         r.model.animate(q');
+%         %Get camera location
+%         Tc = r.model.fkine(q);
+%         cam.T = Tc;
+%         drawnow
+%         % update the history variables
+%         hist.uv = uv(:);
+%         vel = v;
+%         hist.vel = vel;
+%         hist.e = e;
+%         hist.en = norm(e);
+%         hist.jcond = cond(J);
+%         hist.Tcam = Tc;
+%         hist.vel_p = vel;
+%         hist.uv_p = uv;
+%         hist.qp = qp;
+%         hist.q = q;
+%         history = [history hist];
+%          pause(1/fps)
+%         if ~isempty(200) && (ksteps > 200)
+%             break;
+%         end
+%         %update current joint position
+%         q0 = q;
+%  end %loop finishes
