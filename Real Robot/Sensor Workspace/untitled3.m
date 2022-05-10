@@ -5,18 +5,18 @@ rosshutdown
 rosinit
 sub=rossubscriber("/camera/color/image_raw");
 pause(1);
-[msg2] = receive(sub,10);
+[msg2] = receive(sub);
 image = msg2.readImage;
 %image = rgb2gray(image);
 % Convert RGB image to chosen color space
 I = rgb2hsv(image);
 
 % Define thresholds for channel 1 based on histogram settings
-channel1MinBlue = 0.492;
-channel1MaxBlue = 0.603;
+channel1MinBlue = 0.525;
+channel1MaxBlue = 0.594;
 
 % Define thresholds for channel 2 based on histogram settings
-channel2MinBlue = 0.206;
+channel2MinBlue = 0.326;
 channel2MaxBlue = 1.000;
 
 % Define thresholds for channel 3 based on histogram settings
@@ -44,7 +44,9 @@ hold on;
 scatter(xb,yb)
 hold off;
 %intrinsic parameters from camera
- K = [912.508056640625, 0.0, 651.252197265625, 0.0, 912.2136840820312, 348.5895080566406, 0.0, 0.0, 1.0];
+ K = [912.508056640625, 0.0, 651.252197265625, 
+     0.0, 912.2136840820312, 348.5895080566406, 
+     0.0, 0.0, 1.0];
  intrinsics = cameraIntrinsics([K(1) K(5)],[K(3) K(6)],[1280 720]);
  rgbHeight = intrinsics.ImageSize(1);
  rgbWidth = intrinsics.ImageSize(2);
