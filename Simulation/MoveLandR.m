@@ -1,7 +1,6 @@
 function MoveLandR(Dobot, initialJoints, direction)
 
     newPosition = transl(direction);
-
     steps = 50;
 
     targJointAngles = Dobot.model.ikine(newPosition, initialJoints, [1,1,1,0,0,0]);
@@ -11,10 +10,3 @@ function MoveLandR(Dobot, initialJoints, direction)
         drawnow();
     end
 end
-%     % Go from ibrick to start
-%     currJointAngles = targJointAngles
-%     jointTrajectory = jtraj(currJointAngles, initialJoints, steps);
-%     for i = 1:steps
-%         animate(Dobot.model,jointTrajectory(i,:));
-%         drawnow();
-%     end
