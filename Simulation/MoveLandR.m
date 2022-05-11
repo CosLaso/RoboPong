@@ -10,11 +10,11 @@ function MoveLandR(Dobot, initialJoints, direction)
         animate(Dobot.model,jointTrajectory(i,:));
         drawnow();
     end
-
-    % Go from ibrick to start
-    currJointAngles = targJointAngles
-    jointTrajectory = jtraj(currJointAngles, initialJoints, steps);
-    for i = 1:steps
-        animate(Dobot.model,jointTrajectory(i,:));
-        drawnow();
-    end
+end
+%     % Go from ibrick to start
+%     currJointAngles = targJointAngles
+%     jointTrajectory = jtraj(currJointAngles, initialJoints, steps);
+%     for i = 1:steps
+%         animate(Dobot.model,jointTrajectory(i,:));
+%         drawnow();
+%     end

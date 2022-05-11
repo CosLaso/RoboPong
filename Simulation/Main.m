@@ -72,18 +72,18 @@ PlaceObject('Stool.ply',[-3.5,-2.2,0]);
 
 %% Simulate 4 DoF Robot (Use until Dobot Models work)
 
-L1 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
-L2 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
-L3 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
-L4 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
-robot = SerialLink([L1 L2 L3 L4],'name','myRobot');   
-
-% Rotate robot to the correct orientation
-robot.base = transl(0.55,0,1.145) * trotx(0,'deg') * troty(0,'deg');
-
-% Plot the robot into the environment
-robot.plot([pi,pi,pi,pi]);
-robot.delay = 0;
+% L1 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+% L2 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+% L3 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+% L4 = Link('d',0,'a',0.1,'alpha',0,'qlim',[-pi pi]);
+% robot = SerialLink([L1 L2 L3 L4],'name','myRobot');   
+% 
+% % Rotate robot to the correct orientation
+% robot.base = transl(0.55,0,1.145) * trotx(0,'deg') * troty(0,'deg');
+% 
+% % Plot the robot into the environment
+% robot.plot([pi,pi,pi,pi]);
+% robot.delay = 0;
 
 %% Movement of Balls [Lab 4.1] (Balls moves triangularly not projectile)
 
@@ -95,28 +95,62 @@ vertices2 = get(mesh_h2,'vertices');
 i = 0;    % j represents x coordinate & i represents z coordinate (i is 1.445 globally)
 k = 0;    % k is a condtional variable that triggers the bounce
 
-for j = 0:0.05:1.5
-    tr = transl(j,0,i);
-    transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
-    transformedVertices2 = [vertices2,ones(size(vertices2,1),1)] * tr';
-    set(mesh_h,'vertices',transformedVertices(:,1:3));
-    set(mesh_h2,'vertices',transformedVertices2(:,1:3));
-    drawnow();
-    pause(0.25);
-    if (i <= -0.3)
-        k = 1;
-    end
-    if (k == 1)
-        i = (i+0.015);
-    else
+prompt = "Which way do you want the Dobot to move Left or Right: ";
+txt = input(prompt, "s");
+
+
+initialJoints = [0 0 0 0];
+Dobot = Dobot(false);
+left = [0.4, -0.2, 1.4];
+right = [0.4, 0.2, 1.4];
+steps = 100;
+
+if txt == 'Left' 
+    for j = 0:0.05:1.5
+        tr = transl(j,0,i);
+        transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
+        transformedVertices2 = [vertices2,ones(size(vertices2,1),1)] * tr';
+        set(mesh_h,'vertices',transformedVertices(:,1:3));
+        set(mesh_h2,'vertices',transformedVertices2(:,1:3));
+        drawnow();
+        pause(0.25);
+        if (i <= -0.3)
+           k = 1;
+       end
+       if (k == 1)
+            i = (i+0.015);
+       else
         i = (i-0.015);
+       end
     end
+    MoveLandR(Dobot, initialJoints, left)
+
+elseif txt == 'Right'
+    for j = 0:0.05:1.5
+        tr = transl(j,0,i);
+        transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
+        transformedVertices2 = [vertices2,ones(size(vertices2,1),1)] * tr';
+        set(mesh_h,'vertices',transformedVertices(:,1:3));
+        set(mesh_h2,'vertices',transformedVertices2(:,1:3));
+        drawnow();
+        pause(0.25);
+        if (i <= -0.3)
+           k = 1;
+        end
+        if (k == 1)
+            i = (i+0.015);
+        else
+            i = (i-0.015);
+        end
+    end
+    MoveLandR(Dobot, initialJoints, right)
 end
 
-%% Simulate Dobot
 
+%% Simulate Dobot
+% 
 % initialJoints = [0 0 0 0];
-% Dobot = Dobot(false);
+Dobot = Dobot(false);
 % left = [0.4, -0.2, 1.4];
 % right = [0.4, 0.2, 1.4];
 % steps = 100;
