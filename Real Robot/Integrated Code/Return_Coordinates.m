@@ -19,27 +19,27 @@ fprintf('Camera is initialised\n');
     
 % Centre of Red
 extracted_red = extract_red(image);                     % Outputs binary (0,1) same size array with red as 1
-red_centre = calculate_centroid(extracted_red);         % Outputs pixel coordinates of red cube centre
+red_centre = calculateCentroid(extracted_red);         % Outputs pixel coordinates of red cube centre
 % figure, imshow(extracted_red);                          % Show the extracted RED (RED pixels are white, every other pixel is black)
 
 % Centre of Green
 extracted_green = extract_green(image);
-green_centre = calculate_centroid(extracted_green);     % Outputs pixel coordinates of green cube centre
+green_centre = calculateCentroid(extracted_green);     % Outputs pixel coordinates of green cube centre
 % figure, imshow(extracted_green);
 
 % Centre of Yellow
 extracted_yellow = extract_yellow(image);
-yellow_centre = calculate_centroid(extracted_yellow);   %  Outputs pixel coordinates of yellow cube centre
+yellow_centre = calculateCentroid(extracted_yellow);   %  Outputs pixel coordinates of yellow cube centre
 % figure, imshow(extracted_yellow);
 
 % Centre of Blue
 extracted_blue = extract_blue(image);
-blue_centre = calculate_centroid(extracted_blue);   %  Outputs pixel coordinates of blue cube centre
+blue_centre = calculateCentroid(extracted_blue);   %  Outputs pixel coordinates of blue cube centre
 % figure, imshow(extracted_blue);
 
 % Centre of Orange
 extracted_orange = extract_orange(image);
-orange_centre = calculate_centroid(extracted_orange);   %  Outputs pixel coordinates of blue cube centre
+orange_centre = calculateCentroid(extracted_orange);   %  Outputs pixel coordinates of blue cube centre
 % figure, imshow(extracted_orange);
 
 % Plot results
