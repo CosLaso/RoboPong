@@ -18,13 +18,13 @@ hold on
 % surf([-6,-6 ; 10,10], [-6,6 ; -6,6], [0,0 ; 0,0],'CData',imread('Concrete.jpg'),'FaceColor','texturemap');            % From UTS Canvas
 % surf([-4,-4 ; 8,8], [-4,4 ; -4,4], [0,0 ; 0,0],'CData',imread('Tile.jpg'),'FaceColor','texturemap'); 
 
-% Place in Hazard Tape (from https://nationalsafetysigns.com.au/safety-signs/reflective-tape-sticker-hazard-tape-v2628/)
+% % Place in Hazard Tape (from https://nationalsafetysigns.com.au/safety-signs/reflective-tape-sticker-hazard-tape-v2628/)
 % surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Tape.jpg'),'FaceColor','texturemap');
 
-%Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
+% Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
 % PlaceObject('Table.ply',[0,0,0]);
 
-% % Placement of Fence (from https://free3d.com/3d-model/fence-43609.html) [2,4,1,3]
+% % Placement of Fence (from https://free3d.com/3d-model/fence-43609.html)
 % PlaceObject('Fence1.ply', [-4, 2,1.7]);
 % PlaceObject('Fence1.ply', [-4,-2,1.7]);
 % PlaceObject('Fence1.ply', [ 8, 2,1.7]);
@@ -33,36 +33,36 @@ hold on
 % PlaceObject('Fence2.ply', [-2,-4,1.7]);
 % PlaceObject('Fence2.ply', [ 6,-4,1.7]);
 % PlaceObject('Fence2.ply', [ 6, 4,1.7]);
-% PlaceObject('Fence2.ply', [-2, 4,1.7]);          % FenceOD is the fence with xy axis flipped
-% 
+% PlaceObject('Fence2.ply', [-2, 4,1.7]);
+
 % % Placement of Emergency Stop Button (from https://free3d.com/3d-model/emergency-stop-button-813870.html)
 % PlaceObject('Emergency_Stop.ply',[3,-3.8,1]);
 % PlaceObject('Emergency_Stop.ply',[-3,-3.8,1]);
-% 
+
 % % Placement of Fire Extinguisher (from https://free3d.com/3d-model/-fire-extinguisher-v3--639064.html)
 % PlaceObject('Fire_Extinguisher.ply',[-3.8,3.25,0.55]);
-% 
+
 % % Placement of Worker (from https://www.cgtrader.com/items/889520/download-page)
 % PlaceObject('Worker.ply',[-1,-1.75,0]);
 % PlaceObject('Worker2.ply', [2.2, 0, 0]);
 
 % % Placement of Trash Can (from https://free3d.com/3d-model/rubbish-bin-83371.html)
 % PlaceObject('Bin.ply',[-3.8,2.5,0]);
-% 
+
 % % Placement of Plants (from ???)
 % PlaceObject('Plants.ply', [6, 4.5, 0])
 % PlaceObject('Plants.ply', [-2, 4.5, 0])
-% 
+
 % % Placement of Sink (https://www.cgtrader.com/items/948227/download-page)
 % PlaceObject('Sink.ply', [6, -3.8, 0])
-% 
+
 % % Placement of Storage Container (from https://free3d.com/3d-model/storage-container-v2--782422.html)
 % PlaceObject('Storage.ply',[-3.5,0,0]);
 % PlaceObject('Storage.ply',[-3.5,-1.25,0]);
 % PlaceObject('Storage.ply',[7.5,0,0]);
 % PlaceObject('Storage.ply',[7.5,-1.25,0]);
 % PlaceObject('Storage.ply',[7.5,1.25,0]);
-% 
+
 % % Placement of Stool (from https://free3d.com/3d-model/wood-stool-303532.html)
 % PlaceObject('Stool.ply',[0,-3.3,0]);
 % PlaceObject('Stool.ply',[0.75,-3.3,0]);
@@ -78,32 +78,37 @@ hold on
 % L3 = Link('d',0,'a',0.0675,'alpha',0,'qlim',[-pi pi]);
 % L4 = Link('d',0,'a',0.0675,'alpha',0,'qlim',[-pi pi]);
 % robot = SerialLink([L1 L2 L3 L4],'name','myRobot');   
-% 
+ 
 % robot.base = transl(0.55,0,1.145) * trotx(0,'deg') * troty(0,'deg');            % Rotate robot to the correct orientation
 % robot.plot([-pi,0,0,0]);                                                        % Plot the robot into the environment
 
 %% Simulate Dobot
 
-% Dobot = Dobot(false);
+% DobotBase = [0.55,0,1.145];
 
-%% Movement of Balls & Cup [Lab 4.1]
+% Dobot = Dobot();
+% Dobot = Dobot(transl(DobotBase));
+% DobotWS = DobotWithoutSuction();
+% DobotWS = DobotWithoutSuction(transl(DobotBase));
 
-% Balls obtained from (https://free3d.com/3d-model/golf-ball-v1--411104.html)
+%% Movement of Balls & Cup & Simple Robotic Arm [Lab 4.1]
+
+% % Balls obtained from (https://free3d.com/3d-model/golf-ball-v1--411104.html)
 % mesh_h = PlaceObject('BallRed.ply', [-0.95,0.245,1.445]);  % Bouncing ball (red)
 % vertices = get(mesh_h,'vertices');
-% mesh_h2 = PlaceObject('Ball.ply', [-0.95,-0.245,1.445]);   % Bouncing ball (yellow)
+% mesh_h2 = PlaceObject('BallYellow.ply', [-0.95,-0.245,1.445]);   % Bouncing ball (yellow)
 % vertices2 = get(mesh_h2,'vertices');
 % mesh_h3 = PlaceObject('CupFlipped.ply');
 % vertices3 = get(mesh_h3,'vertices');
 % mesh_h4 = PlaceObject('Cup.ply');
 % vertices4 = get(mesh_h4,'vertices');
-% 
-% BallColour = 1;
-% 
+ 
+% BallColour = 0;
+ 
 % j = 0;    % j represents x cooridnate
 % i = 0;    % i represents z coordinate (i is 1.445 globally)
 % m = 0;    % k is a condtional variable that triggers the bounce
-% 
+
 % for k = 0:0.05:pi/2
 %     tr = transl(j,0,i);
 %     transformedVertices = [vertices,ones(size(vertices,1),1)] * tr';
@@ -122,15 +127,15 @@ hold on
 %         i = (i-0.015);
 %     end
 %     if (BallColour == 0)            % For yellow ball
-%         Dobot.model.animate([k,0,0,0]);
-%         tr2 = Dobot.model.fkine([k,0,0,0]);
+%         DobotWS.model.animate([k,0,0]);
+%         tr2 = DobotWS.model.fkine([k,0,0]);
 %         transformedVertices3 = [vertices3,ones(size(vertices3,1),1)] * tr2';
 %         set(mesh_h3,'vertices',transformedVertices3(:,1:3));
 %         drawnow();
 %         pause(0.01)
 %     else                            % For red ball
-%         Dobot.model.animate([-k,0,0,0])
-%         tr2 = Dobot.model.fkine([-k,0,0,0]);
+%         DobotWS.model.animate([-k,0,0])
+%         tr2 = DobotWS.model.fkine([-k,0,0]);
 %         transformedVertices4 = [vertices4,ones(size(vertices4,1),1)] * tr2';
 %         set(mesh_h4,'vertices',transformedVertices4(:,1:3));
 %         drawnow();
@@ -138,114 +143,41 @@ hold on
 %     end
 % end
 
-%% RMRC (Resolved Rate Motion Control) [Lab 6] *** - We have code but it doesn't work
+%% RMRC (Resolved Rate Motion Control) [Lab 6] - Need to fix zooming issue
 
-% % Need to adapt this to include 2 extra degrees of freedom - using lab 6
-% 
-% mdl_planar2;                                  % Load 2-Link Planar Robot
-% 
-% T1 = [eye(3) [1.5 1 0]'; zeros(1,3) 1];       % First pose
-% T2 = [eye(3) [1.5 -1 0]'; zeros(1,3) 1];      % Second pose
-% steps = 50;
-% 
-% % 3.6
-% M = [1 1 zeros(1,4)];                         % Masking Matrix
-% x1 = [1.5 1]';
-% x2 = [1.5 -1]';
-% deltaT = 0.05;                                        % Discrete time step
-% 
-% % 3.7
-% x = zeros(2,steps);
-% s = lspb(0,1,steps);                                 % Create interpolation scalar
-% for i = 1:steps
-%     x(:,i) = x1*(1-s(i)) + s(i)*x2;                  % Create trajectory in x-y plane
-% end
-% 
-% % 3.8
-% qMatrix = nan(steps,2);
-% 
-% % 3.9
-% qMatrix(1,:) = p2.ikine(T1,[0 0],M);                 % Solve for joint angles
-% 
-% % 3.10
-% for i = 1:steps-1
-%     xdot = (x(:,i+1) - x(:,i))/deltaT;                             % Calculate velocity at discrete time step
-%     J = p2.jacob0(qMatrix(i,:));            % Get the Jacobian at the current state
-%     J = J(1:2,:);                           % Take only first 2 rows
-%     qdot = inv(J)*xdot;                             % Solve velocitities via RMRC
-%     qMatrix(i+1,:) =  qMatrix(i,:) + deltaT*qdot';                   % Update next joint state
-% end
-% 
-% p2.plot(qMatrix,'trail','r-');
-%
-% MoveWithRMRC(robot,[1 0 0],1)
+% testPoint = [0.55,0.245,1.2];
+% RMRCMovement(DobotWS,testPoint);
 
-%% Collision Checking/Avoidance [Lab 5] - Checking Complete, Need to Add Avoidance In (giving me a headache)
+%% Collision Checking/Avoidance [Lab 5] - No avoidance, just stopping
 
-% % Finds joint angles where intersection is present (using planes)
-% [v,f,fn] = RectangularPrism([0.5,-0.275,-0.25], [0.75,0.275,0.25]);
-% steps = 50;
-% q1 = [pi/3,0,0,0]; 
-% q2 = [-pi/3,0,0,0];
-% 
-% qMatrix = jtraj(q1,q2,steps);
-% for i = 1:steps
-%     result = IsCollision(robot,qMatrix(i,:),f,v,fn);
-%     qMatrix(i,:)
-%     robot.plot(q1)
-%     if result == 1
-%         break
-%     end 
-% end 
-% 
-% % Finds if there are any collisions on the robot path (using points)
-% testPoint = [0 0 0];
-% collision = pointsInCollision(robot,q1,testPoint)
-% 
-% % Avoidance of the collision point
-% 
-% % Stuff in the robot creation for purpose of visualisation
-% q = zeros(1,4);                                                     % Create a vector of initial joint angles        
-% 
 % % Creating an object to collide with
 % centerpnt = [0.2,0,1.145];
 % side = 0.2;
 % plotOptions.plotFaces = true;
-% [vertex,faces,faceNormals] = RectangularPrism(centerpnt-side/2, centerpnt+side/2,plotOptions);
-% 
-% % Set Moving Parameters
-% q1 = [(pi/4),0,0 0];
-% q2 = [-(pi/4),0,0 0];
-% steps = 2;
-% 
-% while ~isempty(find(1 < abs(diff(rad2deg(jtraj(q1,q2,steps)))),1))
-%     steps = steps + 1;
-% end
-% 
+% [v,f,fn] = RectangularPrism(centerpnt-side/2, centerpnt+side/2,plotOptions);
+
+% % Creating trajectory
+% q1 = [pi/3,0,0]; 
+% q2 = [-pi/3,0,0];
+% steps = 50;
 % qMatrix = jtraj(q1,q2,steps);
-% result = true(steps,1);                 % A matrix of steps [rows] x 1 [column]
-% 
+
+% % Finds if there are any collision on the robot path (using planes)
 % for i = 1:steps
-%     result(i) = IsCollision(Dobot.model,qMatrix(i,:),faces,vertex,faceNormals,false);
-%     Dobot.model.animate(qMatrix(i,:));
+%     result = IsCollision(DobotWS,qMatrix(i,:),f,v,fn);
+%     qMatrix(i,:)
+%     DobotWS.model.animate(qMatrix(i,:));
 %     drawnow();
-% end
-%  
-% % Manually create cartesian waypoints - For a manipulator with fewer than 6DOF a mask matrix argument must be specified
-% Dobot.model.animate(q1);
-% qWaypoints = [q1 ; Dobot.model.ikcon(transl(0.375,-0.2,1.4),q1)];
-% qWaypoints = [qWaypoints; Dobot.model.ikcon(transl(0.375,-0.2,1.6),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; Dobot.model.ikcon(transl(0.375,0.2,1.6),qWaypoints(end,:))];
-% qWaypoints = [qWaypoints; Dobot.model.ikcon(transl(0.375,0.2,1.4),q2)];
-% qWaypoints = [qWaypoints; q2];
-% qMatrix = InterpolateWaypointRadians(qWaypoints,deg2rad(5));
-% 
-% for i = 1:steps
-% if IsCollision(Dobot.model,qMatrix,faces,vertex,faceNormals)
+%     if result == 1
+%         error('Collision detected!')
+%     end 
+% end 
+ 
+% % Finds if there are any collisions on the robot path (using points)
+% testPoint = [0.55,0,1.145];
+% collision = PointInCollision(DobotWS,q1,testPoint);
+% if collision == 1
 %     error('Collision detected!!');
-% end
-%     Dobot.model.animate(qMatrix(i,:));
-%     drawnow();
 % end
 
 %% GUI (Graphical User Interface) [Subject Resources]
