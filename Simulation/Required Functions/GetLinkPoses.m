@@ -4,7 +4,7 @@
 % transforms - list of transforms
 function [ transforms ] = GetLinkPoses( q, robot)
 
-links = robot.links;
+links = robot.model.links;
 transforms = zeros(4, 4, length(links) + 1);
 transforms(:,:,1) = robot.base;
 
