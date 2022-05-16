@@ -77,9 +77,7 @@ oCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,orange_centre
 %% Convert Camera Coordinates to Dobot Coordinates
     
 % Dobot Parameters
-% groundToDobotCentre = 0.057;
 blockHeight = 0.03;
-% tableheight = 0.0900;
     
 % Converting Camera Coordinates to Dobot Coordinates (each stored in a 1x3 matrix)
 rDobot = [(0.2575+rCameraCoordinate(1,2)) rCameraCoordinate(1,1) -0.0375]        
