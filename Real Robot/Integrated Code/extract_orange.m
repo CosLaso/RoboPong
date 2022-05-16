@@ -1,4 +1,4 @@
-function [BW_object] = extract_orange(image)
+function [BWObject] = extractOrange(image)
 
 %Isolate orange objects and return black and white image of isolated objects
 
@@ -21,6 +21,6 @@ function [BW_object] = extract_orange(image)
     sliderBW = (I(:,:,1) >= channel1Min ) & (I(:,:,1) <= channel1Max) & ...
         (I(:,:,2) >= channel2Min ) & (I(:,:,2) <= channel2Max) & ...
         (I(:,:,3) >= channel3Min ) & (I(:,:,3) <= channel3Max);
-    BW_object = sliderBW;
+    BWObject = sliderBW;
     
 end
