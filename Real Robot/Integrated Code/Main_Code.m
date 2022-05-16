@@ -1,5 +1,5 @@
 
-%% Pick & Place Code for Sensors & Control
+%% Pick and Place Code for Sensors and Control
 
 close all;
 clear all;
@@ -11,51 +11,51 @@ rosinit;            % Initialise connection
 %% Initialise the Camera
 
 sub = rossubscriber("camera/color/image_raw");
-[msg2] = receive(sub);
-image = readImage(msg2);
+[msg2] = receive(sub);                                % Take the image
+image = readImage(msg2);                              % Make the image readable so we can read
 fprintf('\nCamera is initialised\n');
 
 %% Find Centriods of Blocks
 
 % Centres of coloured blocks
-extracted_red = extract_red(image);                     % Outputs binary (0,1) same size array with red as 1
-red_centre = calculateCentroid(extracted_red);          % Outputs pixel coordinates of red cube centre
-% figure, imshow(extracted_red);                          % Show the extracted RED (RED pixels are white, every other pixel is black)
+extractedRed = extractRed(image);                     % Outputs binary (0,1) image (RED pixels as 1, everything else as 0)
+redCentre = calculateCentroid(extractedRed);          % Outputs pixel coordinates of red cube centre
+figure, imshow(extractedRed);                         % Show the extracted RED in BW image (RED pixels are white, everything else is black)
 
-extracted_green = extract_green(image);
-green_centre = calculateCentroid(extracted_green);      % Outputs pixel coordinates of green cube centre
-% figure, imshow(extracted_green);
+extractedGreen = extractGreen(image);
+greenCentre = calculateCentroid(extractedGreen);      % Outputs pixel coordinates of green cube centre
+figure, imshow(extractedGreen);
 
-extracted_yellow = extract_yellow(image);
-yellow_centre = calculateCentroid(extracted_yellow);    %  Outputs pixel coordinates of yellow cube centre
-% figure, imshow(extracted_yellow);
+extractedYellow = extractYellow(image);
+yellowCentre = calculateCentroid(extractedYellow);    %  Outputs pixel coordinates of yellow cube centre
+figure, imshow(extractedYellow);
 
-extracted_blue = extract_blue(image);
-blue_centre = calculateCentroid(extracted_blue);        %  Outputs pixel coordinates of blue cube centre
-% figure, imshow(extracted_blue);
+extractedBlue = extractBlue(image);
+blueCentre = calculateCentroid(extractedBlue);        %  Outputs pixel coordinates of blue cube centre
+figure, imshow(extractedBlue);
 
-extracted_orange = extract_orange(image);
-orange_centre = calculateCentroid(extracted_orange);    %  Outputs pixel coordinates of blue cube centre
-% figure, imshow(extracted_orange);
+extractedOrange = extractOrange(image);
+orangeCentre = calculateCentroid(extractedOrange);    %  Outputs pixel coordinates of blue cube centre
+figure, imshow(extractedOrange);
 
 % Plot results
 figure, imshow(image);
 hold on
 
-scatter(red_centre.Centroid(1), red_centre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
-text(red_centre.Centroid(1) + 10, red_centre.Centroid(2),'RED','FontSize',14,'FontWeight','bold');
+scatter(redCentre.Centroid(1), redCentre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
+text(redCentre.Centroid(1) + 10, redCentre.Centroid(2),'RED','FontSize',14,'FontWeight','bold');              % +10 so the writing is legible
 
-scatter(green_centre.Centroid(1), green_centre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
-text(green_centre.Centroid(1) + 10, green_centre.Centroid(2),'GREEN','FontSize',14,'FontWeight','bold');
+scatter(greenCentre.Centroid(1), greenCentre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
+text(greenCentre.Centroid(1) + 10, greenCentre.Centroid(2),'GREEN','FontSize',14,'FontWeight','bold');
 
-scatter(yellow_centre.Centroid(1), yellow_centre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
-text(yellow_centre.Centroid(1) + 10, yellow_centre.Centroid(2),'YELLOW','FontSize',14,'FontWeight','bold');
+scatter(yellowCentre.Centroid(1), yellowCentre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
+text(yellowCentre.Centroid(1) + 10, yellowCentre.Centroid(2),'YELLOW','FontSize',14,'FontWeight','bold');
 
-scatter(blue_centre.Centroid(1), blue_centre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
-text(blue_centre.Centroid(1) + 10, blue_centre.Centroid(2),'BLUE','FontSize',14,'FontWeight','bold');
+scatter(blueCentre.Centroid(1), blueCentre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
+text(blueCentre.Centroid(1) + 10, blueCentre.Centroid(2),'BLUE','FontSize',14,'FontWeight','bold');
 
-scatter(orange_centre.Centroid(1), orange_centre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
-text(orange_centre.Centroid(1) + 10, orange_centre.Centroid(2),'ORANGE','FontSize',14,'FontWeight','bold');
+scatter(orangeCentre.Centroid(1), orangeCentre.Centroid(2),'MarkerFaceColor','black','MarkerEdgeColor','black');
+text(orangeCentre.Centroid(1) + 10, orangeCentre.Centroid(2),'ORANGE','FontSize',14,'FontWeight','bold');
 
 %% Calculate 3D Coordinates in Camera Frame
 
@@ -64,15 +64,15 @@ focalLength = (917.6252+915.7077)/2;
 PPx = 636.2969;
 PPy = 351.4231;
  
-% Depth (z value) from Camera (conversion of mm to m)
+% Depth (z-value) from Camera (conversion of mm to m)
 zCameraToBlock = 400/1000;  
 
 % Camera (xyz) coordinates
-rCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,red_centre,zCameraToBlock);
-gCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,green_centre,zCameraToBlock);
-yCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,yellow_centre,zCameraToBlock);
-bCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,blue_centre,zCameraToBlock);
-oCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,orange_centre,zCameraToBlock);
+rCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,redCentre,zCameraToBlock);
+gCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,greenCentre,zCameraToBlock);
+yCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,yellowCentre,zCameraToBlock);
+bCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,blueCentre,zCameraToBlock);
+oCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,orangeCentre,zCameraToBlock);
 
 %% Convert Camera Coordinates to Dobot Coordinates
     
@@ -80,8 +80,8 @@ oCameraCoordinate = calculateCameraCoordinates(focalLength,PPx,PPy,orange_centre
 blockHeight = 0.03;
     
 % Converting Camera Coordinates to Dobot Coordinates (each stored in a 1x3 matrix)
-rDobot = [(0.2575+rCameraCoordinate(1,2)) rCameraCoordinate(1,1) -0.0375]        
-rDobotHover = [(0.2575+rCameraCoordinate(1,2)) rCameraCoordinate(1,1) 0.1];
+rDobot = [(0.2575+rCameraCoordinate(1,2)) rCameraCoordinate(1,1) -0.0375]              % x and y values are swapped from camera to Dobot wuth z values being hardcoded
+rDobotHover = [(0.2575+rCameraCoordinate(1,2)) rCameraCoordinate(1,1) 0.1];            % 0.2575 is the x-value of the camera in the Dobot frame of reference
 
 gDobot = [(0.2575+gCameraCoordinate(1,2)) gCameraCoordinate(1,1) -0.0375]
 gDobotHover = [(0.2575+gCameraCoordinate(1,2)) gCameraCoordinate(1,1) 0.1];
@@ -98,7 +98,7 @@ oDobotHover = [(0.2575+oCameraCoordinate(1,2)) oCameraCoordinate(1,1) 0.1];
 %% Dropoff Coordinates (Hardcoded Values)
 
 % For primary colours (Red,Yellow,Blue)
-primaryDropoffHover = [0.2575, -0.072, 0.1];
+primaryDropoffHover = [0.2575, -0.072, 0.1];                  % Add in a hover step to ensure the Dobot doesn not knock over the blocks in translation
 primaryDropoff1 = [0.2575, -0.075, -0.03];
 primaryDropoff2 = [0.2575, -0.075, -0.03+blockHeight];
 primaryDropoff3 = [0.2575, -0.075, -0.03+(2*blockHeight)];
@@ -114,7 +114,7 @@ secondaryDropoff2 = [0.2575, 0.075, -0.03+blockHeight];
 safetyStateMsg.Data = 2;
 send(safetyStatePublisher,safetyStateMsg);
 
-pause(25);          % Long pause as robot needs to be fully initialised before starting
+pause(25);                                      % Long pause as robot needs to be fully initialised before starting
 
 fprintf('\nDobot is initialised\n');
 
@@ -135,11 +135,11 @@ targetEndEffectorMsg.Orientation.X = qua(2);
 targetEndEffectorMsg.Orientation.Y = qua(3);
 targetEndEffectorMsg.Orientation.Z = qua(4);
      
-send(targetEndEffectorPub,targetEndEffectorMsg);         % Send command to move
+send(targetEndEffectorPub,targetEndEffectorMsg);               % Send command to move
 
-pause(3)
+pause(3);
 
-fprintf('\nMovement is primed\n');            % Display end effector current position
+fprintf('\nMovement is primed\n');                        % Display to the user that the Dobot movement is primed
 
 %% Priming Motions (Tool State)
 
@@ -149,9 +149,9 @@ state = 0;                        % Binary operator - change to toggle grip
 toolStateMsg.Data = [1 state];
 send(toolStatePub,toolStateMsg);  % Send command to gripper
 
-pause (2)
+pause(2);
 
-fprintf('\nSuction is primed\n');            % Display message for user
+fprintf('\nSuction is primed\n');                        % Display to the user that the suction is primed
 
 %% Movement of the Robot
 
