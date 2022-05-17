@@ -15,54 +15,47 @@ clf
 hold on
 
 % % Place in Concrete Floor
-% surf([-6,-6 ; 10,10], [-6,6 ; -6,6], [0,0 ; 0,0],'CData',imread('Concrete.jpg'),'FaceColor','texturemap');            % From UTS Canvas
-% surf([-4,-4 ; 8,8], [-4,4 ; -4,4], [0,0 ; 0,0],'CData',imread('Tile.jpg'),'FaceColor','texturemap'); 
-
-% % Place in Hazard Tape (from https://nationalsafetysigns.com.au/safety-signs/reflective-tape-sticker-hazard-tape-v2628/)
-% surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Tape.jpg'),'FaceColor','texturemap');
-
-% Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
+% %surf([-6,-6 ; 10,10], [-6,6 ; -6,6], [0,0 ; 0,0],'CData',imread('Concrete.jpg'),'FaceColor','texturemap');            % From https://br.pinterest.com/pin/349029039868306050/
+% surf([-4,-4 ; 4,4], [-4,4 ; -4,4], [0,0 ; 0,0],'CData',imread('Marble.jpg'),'FaceColor','texturemap');                  % https://depositphotos.com/120332480/stock-photo-marble-floor-texture-and-background.html
+% 
+% % Place in Hazard Tape (from https://www.istockphoto.com/photos/red-carpet-texture)
+% surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Carpet.jpg'),'FaceColor','texturemap');
+% 
+% %Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
 % PlaceObject('Table.ply',[0,0,0]);
-
+% 
 % % Placement of Fence (from https://free3d.com/3d-model/fence-43609.html)
 % PlaceObject('Fence1.ply', [-4, 2,1.7]);
 % PlaceObject('Fence1.ply', [-4,-2,1.7]);
-% PlaceObject('Fence1.ply', [ 8, 2,1.7]);
-% PlaceObject('Fence1.ply', [ 8,-2,1.7]);
+% PlaceObject('Fence1.ply', [ 4, 2,1.7]);
+% PlaceObject('Fence1.ply', [ 4,-2,1.7]);
 % PlaceObject('Fence2.ply', [ 2,-4,1.7]);
 % PlaceObject('Fence2.ply', [-2,-4,1.7]);
-% PlaceObject('Fence2.ply', [ 6,-4,1.7]);
-% PlaceObject('Fence2.ply', [ 6, 4,1.7]);
-% PlaceObject('Fence2.ply', [-2, 4,1.7]);
-
+% 
 % % Placement of Emergency Stop Button (from https://free3d.com/3d-model/emergency-stop-button-813870.html)
-% PlaceObject('Emergency_Stop.ply',[3,-3.8,1]);
 % PlaceObject('Emergency_Stop.ply',[-3,-3.8,1]);
-
+% 
 % % Placement of Fire Extinguisher (from https://free3d.com/3d-model/-fire-extinguisher-v3--639064.html)
 % PlaceObject('Fire_Extinguisher.ply',[-3.8,3.25,0.55]);
-
-% % Placement of Worker (from https://www.cgtrader.com/items/889520/download-page)
-% PlaceObject('Worker.ply',[-1,-1.75,0]);
-% PlaceObject('Worker2.ply', [2.2, 0, 0]);
-
+% 
+% % Placement of Manager (from https://www.cgtrader.com/items/889520/.2download-page)
+% PlaceObject('Manager.ply', [3, 3, 0]);
+% PlaceObject('Man.ply', [-2.2, 0, 0]);
+% 
 % % Placement of Trash Can (from https://free3d.com/3d-model/rubbish-bin-83371.html)
 % PlaceObject('Bin.ply',[-3.8,2.5,0]);
-
-% % Placement of Plants (from ???)
-% PlaceObject('Plants.ply', [6, 4.5, 0])
-% PlaceObject('Plants.ply', [-2, 4.5, 0])
-
+% 
 % % Placement of Sink (https://www.cgtrader.com/items/948227/download-page)
-% PlaceObject('Sink.ply', [6, -3.8, 0])
-
+% PlaceObject('Sink.ply', [3, -3.8, 0])
+% 
 % % Placement of Storage Container (from https://free3d.com/3d-model/storage-container-v2--782422.html)
-% PlaceObject('Storage.ply',[-3.5,0,0]);
-% PlaceObject('Storage.ply',[-3.5,-1.25,0]);
-% PlaceObject('Storage.ply',[7.5,0,0]);
-% PlaceObject('Storage.ply',[7.5,-1.25,0]);
-% PlaceObject('Storage.ply',[7.5,1.25,0]);
-
+% PlaceObject('Storage.ply',[3.5,0,0]);
+% PlaceObject('Storage.ply',[3.5,-1.25,0]);
+% 
+% % Placement of Bar (https://www.cgtrader.com/items/173511/download-page)
+% PlaceObject('Bar.ply',[2.5,2.25,0]);
+% 
+% 
 % % Placement of Stool (from https://free3d.com/3d-model/wood-stool-303532.html)
 % PlaceObject('Stool.ply',[0,-3.3,0]);
 % PlaceObject('Stool.ply',[0.75,-3.3,0]);
@@ -70,6 +63,9 @@ hold on
 % PlaceObject('Stool.ply',[-3.65,1.5,0]);
 % PlaceObject('Stool.ply',[-3.25,1.1,0]);
 % PlaceObject('Stool.ply',[-3.5,-2.2,0]);
+% PlaceObject('Stool.ply',[1,3.3,0]);
+% PlaceObject('Stool.ply',[1,2.5,0]);
+% PlaceObject('Stool.ply',[1,1.8,0]);
 
 %% Simulate 4 DoF Robot (For Testing)
 
@@ -188,10 +184,10 @@ hold on
 
 % Definitions
 % Create image target (points in the image plane) 
-pStar = [662 362 362 662; 362 362 662 662];
+pStar = [662 362 ; 362 362 ];
 
 %Create 3D points
-P = [1.8,1.8,1.8,1.8; -0.25,0.25,0.25,-0.25; 1.25,1.25,0.75,0.75];
+P = [1.8,1.8; -0.25,0.25; 1.25,1.25];
 
 % Make the Dobot
 % Dobot = Dobot();
@@ -201,7 +197,7 @@ DobotWS = DobotWithoutSuction();
 q0 = [pi/2, -pi/6, 0];
 
 % Add the camera
-cam = CentralCamera('focal', 0.08, 'pixel', 10e-5, 'resolution', [1024 1024], 'centre', [512 512],'name', 'UR10camera');
+cam = CentralCamera('focal', 0.08, 'pixel', 10e-5, 'resolution', [1024 1024], 'centre', [512 512],'name', 'Dobot camera');
 
 % frame rate
 fps = 25;
