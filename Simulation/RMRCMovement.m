@@ -1,4 +1,4 @@
-function [qMatrix] = RMRCMovement(robot,fPoint)    % Adapted from the RMRC_2 file
+function [qMatrix] = RMRCMovement(robot,fPoint,v,f,fn)    % Adapted from the RMRC_2 file
 
     lims = robot.jointLimits;
     iPoint = robot.model.fkine(robot.model.getpos());
@@ -12,7 +12,7 @@ function [qMatrix] = RMRCMovement(robot,fPoint)    % Adapted from the RMRC_2 fil
 
     % 1.2) Allocate array data
     m = zeros(steps,1);             % Array for Measure of Manipulability
-    qMatrix = zeros(steps,3);       % Array for joint angles
+    qMatrix = zeros(steps,5);       % Array for joint angles
     qdot = zeros(steps,3);          % Array for joint velocities
     theta = zeros(3,steps);         % Array for roll-pitch-yaw angles
     x = zeros(3,steps);             % Array for x-y-z trajectory
@@ -29,7 +29,7 @@ function [qMatrix] = RMRCMovement(robot,fPoint)    % Adapted from the RMRC_2 fil
     end
 
     T = [rpy2r(theta(1,1),theta(2,1),theta(3,1)) x(:,1);zeros(1,3) 1];          % Create transformation of first point and angle
-    q0 = zeros(1,3);                                                            % Initial guess for joint angles
+    q0 = zeros(1,5);                                                            % Initial guess for joint angles
     qMatrix(1,:) = robot.model.ikcon(T,q0);                                     % Solve joint angles to achieve first waypoint
 
     % Track the trajectory with RMRC
@@ -64,8 +64,17 @@ function [qMatrix] = RMRCMovement(robot,fPoint)    % Adapted from the RMRC_2 fil
         end
         qMatrix(i+1,1:3) = qMatrix(i,1:3)+deltaT*qdot(i,:);                     % Update next joint state based on joint velocities
     end
+    
+    qMatrix(:,4) = -qMatrix(:,3);                                               % To ensure the end effector stays parallel to ground
 
-    robot.model.plot(qMatrix,'trail','r-')
+    for i = 1:steps                                                             % Animaton of the Dobot
+        result = IsCollision(robot,qMatrix(i,:),f,v,fn);                        % Collision detection (planar)
+        robot.model.animate(qMatrix(i,:));
+        drawnow();
+        if result == 1
+            error('Collision detected!')                                        % Cause an error to occur if there is collision
+        end 
+    end
 
 end
 
