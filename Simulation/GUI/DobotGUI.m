@@ -1,15 +1,15 @@
 function varargout = DobotGUI(varargin)
-% DOBOTGUI MATLAB code for DobotGUI.fig
-%      DOBOTGUI, by itself, creates a new DOBOTGUI or raises the existing
+% DobotGUI MATLAB code for DobotGUI.fig
+%      DobotGUI, by itself, creates a new DobotGUI or raises the existing
 %      singleton*.
 %
-%      H = DOBOTGUI returns the handle to a new DOBOTGUI or the handle to
+%      H = DobotGUI returns the handle to a new DobotGUI or the handle to
 %      the existing singleton*.
 %
-%      DOBOTGUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in DOBOTGUI.M with the given input arguments.
+%      DobotGUI('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in DobotGUI.M with the given input arguments.
 %
-%      DOBOTGUI('Property','Value',...) creates a new DOBOTGUI or raises the
+%      DobotGUI('Property','Value',...) creates a new DobotGUI or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
 %      applied to the GUI before DobotGUI_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
@@ -22,7 +22,7 @@ function varargout = DobotGUI(varargin)
 
 % Edit the above text to modify the response to help DobotGUI
 
-% Last Modified by GUIDE v2.5 16-May-2022 23:25:11
+% Last Modified by GUIDE v2.5 18-May-2022 00:52:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,64 +55,19 @@ function DobotGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 % Update handles structure
-guidata(hObject, handles);
 
 % UIWAIT makes DobotGUI wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
-axes(handles.axes1);
+robot =  Dobot;
+handles.robot = robot;
 
-L(1) = Link('d', 0.09, 'a', 0, 'alpha', pi/2, 'offset', 0, 'qlim', [-3*pi/4,3*pi/4]);
-L(2) = Link('d', 0, 'a', -0.152, 'alpha', 0,'offset', deg2rad(-32.5), 'qlim', [0,17*pi/36]);
-L(3) = Link('d', 0, 'a', -0.147, 'alpha', 0, 'offset', deg2rad(62.25), 'qlim', [-pi/18,19*pi/36]);
-L(4) = Link('d', 0, 'a', 0.02, 'alpha', 0, 'offset', deg2rad(-30), 'qlim', [-pi/2,pi/2]);
-model = SerialLink(L, 'name', 'Dobot');
-
-model.base = transl(0.55,0,1.145);
-
-% Given a robot index, add the glyphs (vertices and faces) and
-% colour them in if data is available
-
-for linkIndex = 0:model.n
-    [faceData, vertexData, plyData{linkIndex + 1}] = plyread(['DobotMagicianLink', num2str(linkIndex), '.ply'], 'tri'); %#ok<AGROW>
-    model.faces{linkIndex + 1} = faceData;
-    model.points{linkIndex + 1} = vertexData;
-end
-
-% Display robot
-workspace = [-5 5 -5 2 -0.3 2]; 
-model.plot3d(zeros(1, model.n), 'noarrow', 'workspace', workspace);
-if isempty(findobj(get(gca, 'Children'), 'Type', 'Light'))
-    camlight
-end
-model.delay = 0;
-
-% Try to correctly colour the arm (if colours are in ply file data)
-for linkIndex = 0:model.n
-    handles = findobj('Tag', model.name);
-    h = get(handles, 'UserData');
-    try
-        h.link(linkIndex + 1).Children.FaceVertexCData = [plyData{linkIndex + 1}.vertex.red ...
-                                                        , plyData{linkIndex + 1}.vertex.green ...
-                                                        , plyData{linkIndex + 1}.vertex.blue] / 255;
-        h.link(linkIndex + 1).Children.FaceColor = 'interp';
-    catch ME_1
-        disp(ME_1);
-        continue;
-    end
-end
-
-
-% Building 3D Environment
+handles.btnEstop_count = 0;
 
 hold on
-
-% Place in Concrete Floor
-surf([-6,-6 ; 10,10], [-6,6 ; -6,6], [0,0 ; 0,0],'CData',imread('Concrete.jpg'),'FaceColor','texturemap');            % From UTS Canvas
-surf([-4,-4 ; 8,8], [-4,4 ; -4,4], [0,0 ; 0,0],'CData',imread('Tile.jpg'),'FaceColor','texturemap'); 
-
-% Place in Hazard Tape (from https://nationalsafetysigns.com.au/safety-signs/reflective-tape-sticker-hazard-tape-v2628/)
-surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Tape.jpg'),'FaceColor','texturemap');
+% Place in the Floor
+surf([-4,-4 ; 4,4], [-4,4 ; -4,4], [0,0 ; 0,0],'CData',imread('Marble.jpg'),'FaceColor','texturemap');                  
+surf([-2,-2;2,2],[-1.5,1.5;-1.5,1.5],[0,0;0,0],'CData',imread('Carpet.jpg'),'FaceColor','texturemap');
 
 %Placement of Table (from https://free3d.com/3d-model/straight-leg-coffee-tablewhite-v1--558417.html)
 PlaceObject('Table.ply',[0,0,0]);
@@ -120,41 +75,33 @@ PlaceObject('Table.ply',[0,0,0]);
 % Placement of Fence (from https://free3d.com/3d-model/fence-43609.html)
 PlaceObject('Fence1.ply', [-4, 2,1.7]);
 PlaceObject('Fence1.ply', [-4,-2,1.7]);
-PlaceObject('Fence1.ply', [ 8, 2,1.7]);
-PlaceObject('Fence1.ply', [ 8,-2,1.7]);
+PlaceObject('Fence1.ply', [ 4, 2,1.7]);
+PlaceObject('Fence1.ply', [ 4,-2,1.7]);
 PlaceObject('Fence2.ply', [ 2,-4,1.7]);
 PlaceObject('Fence2.ply', [-2,-4,1.7]);
-PlaceObject('Fence2.ply', [ 6,-4,1.7]);
-PlaceObject('Fence2.ply', [ 6, 4,1.7]);
-PlaceObject('Fence2.ply', [-2, 4,1.7]);
 
 % Placement of Emergency Stop Button (from https://free3d.com/3d-model/emergency-stop-button-813870.html)
-PlaceObject('Emergency_Stop.ply',[3,-3.8,1]);
 PlaceObject('Emergency_Stop.ply',[-3,-3.8,1]);
 
 % Placement of Fire Extinguisher (from https://free3d.com/3d-model/-fire-extinguisher-v3--639064.html)
 PlaceObject('Fire_Extinguisher.ply',[-3.8,3.25,0.55]);
 
-% Placement of Worker (from https://www.cgtrader.com/items/889520/download-page)
-PlaceObject('Worker.ply',[-1,-1.75,0]);
-PlaceObject('Worker2.ply', [2.2, 0, 0]);
+% Placement of Manager (from https://www.cgtrader.com/items/889520/.2download-page)
+PlaceObject('Manager.ply', [3, 3, 0]);
+PlaceObject('Man.ply', [-2.2, 0, 0]);
 
 % Placement of Trash Can (from https://free3d.com/3d-model/rubbish-bin-83371.html)
 PlaceObject('Bin.ply',[-3.8,2.5,0]);
 
-% Placement of Plants (from ???)
-PlaceObject('Plants.ply', [6, 4.5, 0])
-PlaceObject('Plants.ply', [-2, 4.5, 0])
-
 % Placement of Sink (https://www.cgtrader.com/items/948227/download-page)
-PlaceObject('Sink.ply', [6, -3.8, 0])
+PlaceObject('Sink.ply', [3, -3.8, 0])
 
 % Placement of Storage Container (from https://free3d.com/3d-model/storage-container-v2--782422.html)
-PlaceObject('Storage.ply',[-3.5,0,0]);
-PlaceObject('Storage.ply',[-3.5,-1.25,0]);
-PlaceObject('Storage.ply',[7.5,0,0]);
-PlaceObject('Storage.ply',[7.5,-1.25,0]);
-PlaceObject('Storage.ply',[7.5,1.25,0]);
+PlaceObject('Storage.ply',[3.5,0,0]);
+PlaceObject('Storage.ply',[3.5,-1.25,0]);
+
+% Placement of Bar (https://www.cgtrader.com/items/173511/download-page)
+PlaceObject('Bar.ply',[2.5,2.25,0]);
 
 % Placement of Stool (from https://free3d.com/3d-model/wood-stool-303532.html)
 PlaceObject('Stool.ply',[0,-3.3,0]);
@@ -163,10 +110,11 @@ PlaceObject('Stool.ply',[1.65,-3.3,0]);
 PlaceObject('Stool.ply',[-3.65,1.5,0]);
 PlaceObject('Stool.ply',[-3.25,1.1,0]);
 PlaceObject('Stool.ply',[-3.5,-2.2,0]);
+PlaceObject('Stool.ply',[1,3.3,0]);
+PlaceObject('Stool.ply',[1,2.5,0]);
+PlaceObject('Stool.ply',[1,1.8,0]);
 
-data = guidata(hObject);
-data.model = model;
-guidata(hObject,data);
+guidata(hObject,handles);
 
 % Outputs from this function are returned to the command line.
 function varargout = DobotGUI_OutputFcn(hObject, eventdata, handles) 
@@ -267,9 +215,10 @@ function theta1Slider_Callback(hObject, eventdata, handles)
 % HInts: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
     val = round(get(hObject, 'Value'));
-    L = handles.model.getpos();
+    L = handles.robot.getpos();
     L(1) = deg2rad(val);
-    handles.model.animate(L);
+    handles.robot.animate(L);
+    
         
 % --- Executes during object creation, after setting all properties.
 function theta1Slider_CreateFcn(hObject, eventdata, handles)
@@ -290,10 +239,10 @@ function theta2Slider_Callback(hObject, eventdata, handles)
 % hObject    handle to theta2Slider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    val = round(get(hObject, 'Value'));
-    L = handles.model.getpos();
-    L(2) = deg2rad(val);
-    handles.model.animate(L);
+%     val = round(get(hObject, 'Value'));
+%     L = handles.model.getpos();
+%     L(2) = deg2rad(val);
+%     handles.model.animate(L);
 
 % Executes during object creation, after setting all properties.
 function theta2Slider_CreateFcn(hObject, eventdata, handles)
@@ -315,10 +264,10 @@ function theta3Slider_Callback(hObject, eventdata, handles)
 % hObject    handle to theta3Slider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    val = round(get(hObject, 'Value'));
-    L = handles.model.getpos();
-    L(3) = deg2rad(val);
-    handles.model.animate(L);
+%     val = round(get(hObject, 'Value'));
+%     L = handles.model.getpos();
+%     L(3) = deg2rad(val);
+%     handles.model.animate(L);
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -342,10 +291,10 @@ function theta4Slider_Callback(hObject, eventdata, handles)
 % hObject    handle to theta4Slider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    val = round(get(hObject, 'Value'));
-    L = handles.model.getpos();
-    L(4) = deg2rad(val); 
-    handles.model.animate(L);
+%     val = round(get(hObject, 'Value'));
+%     L = handles.model.getpos();
+%     L(4) = deg2rad(val); 
+%     handles.model.animate(L);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -368,6 +317,15 @@ function btnForward_Callback(hObject, eventdata, handles)
 % hObject    handle to btnForward (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+% th1 = str2double(handles.theta1Num.String)*pi/180;
+% th2 = str2double(handles.theta2Num.String)*pi/180;
+% th3 = str2double(handles.theta3Num.String)*pi/180;
+% th4 = str2double(handles.theta4Num.String)*pi/180;
+% 
+% handles.model.plot([th1 th1 th3 th4]);
+% 
+% T = handles.model.fkine([th1 th2 th3 th4]);
+
 
 %END EFFECTOR X---------------------------------------------------------------------------------------------------------------------------
 
@@ -445,6 +403,21 @@ function btnEstop_Callback(hObject, eventdata, handles)
 % hObject    handle to btnEstop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+if handles.btnEstop_count == 0
+    handles.btnEstop_count = 1;
+    guidata(hObject, handles);
+    handles.stop = 1;
+    disp('Estop Activated')
+    uiwait();
+    handles.btnEstop_count =0;
+    guidata(hObject, handles);
+end
+
+if handles.btnEstop_count == 1
+    handles.btnEstop_count =2;
+    disp('Estop Released')
+    guidata(hObject, handles);
+end
 
 %DISPLAY ACTIVE/INACTIVE STATE-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -455,6 +428,16 @@ function check_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of check as text
 %        str2double(get(hObject,'String')) returns contents of check as a double
 %Executes during object creation, after setting all properties.
+if handles.btnEstop_count == 0 || handles.btnEstop_count == 2
+    set(handles.check, 'Estop Inactive');
+    guidata(hObject, handles);
+end
+if handles.btnEstop_count == 1
+    set(handles.check, 'Estop Active');
+    guidata(hObject, handles);
+end
+    
+
 function check_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to check (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -474,21 +457,61 @@ function btnResume_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % GetDobotRobot
+if handles.btnEstop_count==2
+    disp('Resuming')
+    uiresume();
+else
+    disp('Estop is Activated')
+end
 
-
+%RED PING PONG BALL SELECTION-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % --- Executes on button press in redBall.
 function redBall_Callback(hObject, eventdata, handles)
 % hObject    handle to redBall (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+if handles.btnEstop_count == 0
+    Red(handles.robot)
+    disp('Catching Red Ball')
+else
+    disp("Estop is Activated")
+end
 % Hint: get(hObject,'Value') returns toggle state of redBall
 
-
+%YELLOW PING PONG BALL SELECTION-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % --- Executes on button press in yellowBall.
 function yellowBall_Callback(hObject, eventdata, handles)
 % hObject    handle to yellowBall (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+if handles.btnEstop_count == 0
+    Yellow(handles.robot)
+    disp('Catching Yellow Ball')
+else
+    disp("Estop is Activated")
+end
 % Hint: get(hObject,'Value') returns toggle state of yellowBall
+
+% --- Executes on button press in redBallC.
+function redBallC_Callback(hObject, eventdata, handles)
+% hObject    handle to redBallC (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.btnEstop_count == 0
+    RedCollision(handles.robot)
+    disp('Catching Red Ball')
+else
+    disp("Estop is Activated")
+end
+
+% --- Executes on button press in yellowBallC.
+function yellowBallC_Callback(hObject, eventdata, handles)
+% hObject    handle to yellowBallC (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if handles.btnEstop_count == 0
+    YellowCollision(handles.robot)
+    disp('Catching Yellow Ball')
+else
+    disp("Estop is Activated")
+end
