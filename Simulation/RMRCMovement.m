@@ -1,4 +1,4 @@
-function [qMatrix] = RMRCMovement(robot,fPoint,v,f,fn)    % Adapted from the RMRC_2 file
+function [qMatrix] = RMRCMovement(robot,fPoint)    % Adapted from the RMRC_2 file
 
     lims = robot.jointLimits;
     iPoint = robot.model.fkine(robot.model.getpos());
@@ -10,14 +10,14 @@ function [qMatrix] = RMRCMovement(robot,fPoint,v,f,fn)    % Adapted from the RMR
     epsilon = 0.1;      % Threshold value for manipulability/Damped Least Squares
     W = diag([1 1 1]);  % Weighting matrix for the velocity vector
 
-    % 1.2) Allocate array data
+    % Allocate array data
     m = zeros(steps,1);             % Array for Measure of Manipulability
     qMatrix = zeros(steps,5);       % Array for joint angles
     qdot = zeros(steps,3);          % Array for joint velocities
     theta = zeros(3,steps);         % Array for roll-pitch-yaw angles
     x = zeros(3,steps);             % Array for x-y-z trajectory
     
-    % 1.3) Set up trajectory, initial pose
+    % Set up trajectory, initial pose
     s = lspb(0,1,steps);                % Trapezoidal trajectory scalar
     for i=1:steps
         x(1,i) = (1-s(i))*iPoint(1)+s(i)*fPoint(1); % Points in x
@@ -67,13 +67,9 @@ function [qMatrix] = RMRCMovement(robot,fPoint,v,f,fn)    % Adapted from the RMR
     
     qMatrix(:,4) = -qMatrix(:,3);                                               % To ensure the end effector stays parallel to ground
 
-    for i = 1:steps                                                             % Animaton of the Dobot
-        result = IsCollision(robot,qMatrix(i,:),f,v,fn);                        % Collision detection (planar)
+    for i = 1:steps                                                             % Animaton of the Dobotion (planar)
         robot.model.animate(qMatrix(i,:));
         drawnow();
-        if result == 1
-            error('Collision detected!')                                        % Cause an error to occur if there is collision
-        end 
     end
 
 end

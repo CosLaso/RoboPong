@@ -10,14 +10,14 @@ function [qMatrix] = RMRCMovementWithCollision(robot,fPoint,v,f,fn)    % Adapted
     epsilon = 0.1;      % Threshold value for manipulability/Damped Least Squares
     W = diag([1 1 1]);  % Weighting matrix for the velocity vector
 
-    % 1.2) Allocate array data
+    % Allocate array data
     m = zeros(steps,1);             % Array for Measure of Manipulability
     qMatrix = zeros(steps,5);       % Array for joint angles
     qdot = zeros(steps,3);          % Array for joint velocities
     theta = zeros(3,steps);         % Array for roll-pitch-yaw angles
     x = zeros(3,steps);             % Array for x-y-z trajectory
     
-    % 1.3) Set up trajectory, initial pose
+    % Set up trajectory, initial pose
     s = lspb(0,1,steps);                % Trapezoidal trajectory scalar
     for i=1:steps
         x(1,i) = (1-s(i))*iPoint(1)+s(i)*fPoint(1); % Points in x
