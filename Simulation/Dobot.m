@@ -37,6 +37,8 @@ classdef Dobot < handle
             L(4) = Link('d', 0, 'a', 0.02, 'alpha', 0, 'offset', deg2rad(-30), 'qlim', [-pi/2,pi/2]);
             L(5) = Link('d', 0.06, 'a', 0, 'alpha', 0, 'offset',deg2rad(-30),'qlim', [-pi/2, pi/2]);
             self.model = SerialLink(L, 'name', name, 'base', self.base);
+            
+            self.model.base = transl(0.55,0,1.145);
         end
 
         %% PlotAndColourRobot
